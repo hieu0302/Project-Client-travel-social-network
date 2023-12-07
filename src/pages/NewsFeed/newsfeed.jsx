@@ -4,11 +4,7 @@ import NavBar from "../../layouts/NavBar/navbar";
 
 const NewsFeed = () => {
   return (
-    <div className="flex">
-      <div>
-        <NavBar />
-      </div>
-
+    <div className="flex w-full">
       <News />
 
       <SearchBox />

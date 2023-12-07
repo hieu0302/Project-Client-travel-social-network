@@ -62,10 +62,10 @@ const CreatePost = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button type="primary" ghost onClick={onClickCreatePost}>
+          <Button key="upload" type="primary" ghost onClick={onClickCreatePost}>
             Đăng
           </Button>,
-          <Button danger onClick={handleCancel}>
+          <Button key="cancel" danger onClick={handleCancel}>
             Huỷ bỏ
           </Button>,
         ]}

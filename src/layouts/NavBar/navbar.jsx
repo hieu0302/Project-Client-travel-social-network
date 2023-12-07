@@ -8,25 +8,20 @@ import {
   RiEarthLine,
   RiFileUserLine,
 } from "react-icons/ri";
+import { NavLink } from "react-router-dom";
 
 const menuItems = [
-  { icon: RiHomeWifiLine, text: "Trang Chủ" },
-  { icon: RiNotification3Line, text: "Thông báo" },
-  { icon: RiBookmark3Line, text: "Đã Lưu" },
-  { icon: RiInboxArchiveLine, text: "Hộp thư" },
-  { icon: RiEarthLine, text: "Khám phá" },
-  { icon: RiFileUserLine, text: "Trang cá nhân" },
+  { icon: RiHomeWifiLine, text: "Trang Chủ", to: "/posts" },
+  { icon: RiNotification3Line, text: "Thông báo", to: "/notify" },
+  { icon: RiBookmark3Line, text: "Đã Lưu", to: "/bookmark" },
+  { icon: RiInboxArchiveLine, text: "Hộp thư", to: "/inbox" },
+  { icon: RiEarthLine, text: "Khám phá", to: "/discovery" },
+  { icon: RiFileUserLine, text: "Trang cá nhân", to: "/user" },
 ];
 
 const NavBar = () => {
-  const [selectedItem, setSelectedItem] = useState(0);
-
-  const onClickHandle = (index) => {
-    setSelectedItem(index);
-  };
-
   return (
-    <section className="h-screen w-full border sticky top-0">
+    <section className="h-screen border sticky top-0">
       <div className="font-nunito text-lg h-screen flex flex-col gap-5 p-10 sticky top-5 w-80">
         <div>
           <img src={Logo} alt="Logo" />
@@ -35,18 +30,18 @@ const NavBar = () => {
           {menuItems.map((item, index) => (
             <div
               key={index}
-              className={`flex items-center rounded-lg hover:font-extrabold hover:bg-slate-100 h-10 hover:scale-105 transform transition duration-300 ${
-                selectedItem === index ? "bg-slate-100 font-extrabold" : ""
-              }`}
+              className={`flex items-center rounded-lg hover:font-extrabold hover:bg-slate-100 h-10 hover:scale-105 transform transition duration-300 `}
             >
-              <a
-                onClick={() => onClickHandle(index)}
-                href="#"
-                className="flex items-center gap-3 "
+              <NavLink
+                to={item.to}
+                className={({ isActive }) => {
+                  const activeClass = isActive ? " font-extrabold" : "";
+                  return ` ${activeClass} flex items-center gap-3`;
+                }}
               >
                 <item.icon size={30} />
                 {item.text}
-              </a>
+              </NavLink>
             </div>
           ))}
         </div>

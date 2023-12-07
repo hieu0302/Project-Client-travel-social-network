@@ -13,7 +13,7 @@ import CreatePost from "../../layouts/createPost/createPost";
 
 const News = () => {
   return (
-    <div className="flex flex-col items-center gap-5 w-1/2">
+    <div className="flex flex-col items-center gap-5 w-2/3">
       <div>
         <CreatePost />
       </div>
