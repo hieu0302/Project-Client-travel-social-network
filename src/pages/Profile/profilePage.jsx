@@ -3,7 +3,7 @@ import PostItem from "./postItem/postItem";
 import Navbar from "./navbar/navbar";
 const profilePage = () => {
   return (
-    <div>
+    <div className=" w-full ">
       <link
         rel="stylesheet"
         href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css"
