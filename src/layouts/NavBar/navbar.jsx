@@ -16,7 +16,7 @@ const menuItems = [
   { icon: RiBookmark3Line, text: "Đã Lưu", to: "/bookmark" },
   { icon: RiInboxArchiveLine, text: "Hộp thư", to: "/inbox" },
   { icon: RiEarthLine, text: "Khám phá", to: "/discovery" },
-  { icon: RiFileUserLine, text: "Trang cá nhân", to: "/user" },
+  { icon: RiFileUserLine, text: "Trang cá nhân", to: "/profile" },
 ];
 
 const NavBar = () => {

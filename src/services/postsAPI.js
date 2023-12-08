@@ -9,6 +9,7 @@ const PostsAPI = {
     const url = "/posts";
     return api.get(url);
   },
+
   createPost: (data) => {
     const url = "/posts";
     return api.post(url, data);
