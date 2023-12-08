@@ -6,7 +6,6 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/LoginPage/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage/SignupPage.jsx";
-import Home from "./pages/Home/Home.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -15,7 +14,6 @@ function App() {
     <Router>
       <Toaster />
       <Routes>
-        <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Routes>
