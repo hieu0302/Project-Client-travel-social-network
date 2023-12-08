@@ -1,28 +1,32 @@
-import React from "react";
 import { Form, Input, Button, Checkbox, Card } from "antd";
-import { useNavigate } from "react-router-dom";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
+import { signUp } from "../../services";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const SignupPage = () => {
-  const onFinish = (values) => {
-    console.log(values);
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+    try {
+      const result = await signUp(values);
+      navigate("/login");
+      toast.success("Đăng kí thành công");
+    } catch (error) {
+      console.log(error);
+      toast.error("Đăng kí thất bại");
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const navigate = useNavigate();
-
-  const handleRegisterClick = () => {
-    navigate("/login");
-  };
 
   return (
-    <div
+    <divu
       style={{
         display: "flex",
         flexDirection: "row",
-        height: "100vh", // Use viewport height
+        height: "100vh",
         gap: "50px",
       }}
     >
@@ -144,12 +148,7 @@ const SignupPage = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                onClick={handleRegisterClick}
-              >
+              <Button type="primary" htmlType="submit" block>
                 Đăng Ký
               </Button>
             </Form.Item>
@@ -169,7 +168,7 @@ const SignupPage = () => {
           </Form>
         </div>
       </div>
-    </div>
+    </divu>
   );
 };
 
