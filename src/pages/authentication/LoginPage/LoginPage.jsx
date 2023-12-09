@@ -1,96 +1,91 @@
-import React from "react";
-import { Form, Input, Button, Checkbox, Card } from "antd";
-// import "../App.css";
-// import "../index.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 
-const LoginPage = () => {
+const Login = () => {
   const onFinish = (values) => {
-    console.log(values);
+    console.log("Received values:", values);
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+  const backgroundImageUrl =
+    "https://www.anhngumshoa.com/uploads/images/userfiles/hoatdongngoaikhoa/travel-agency-merchant-account.jpg";
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        height: "100vh", // Use viewport height
-        gap: "100px",
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        height: "100vh",
+        width: "100vw",
       }}
     >
-      <Card
-        style={{
-          flex: "1",
-          backgroundImage: `url('https://www.shutterstock.com/image-vector/airplane-cloud-blue-passport-luggage-600nw-2305845281.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          maxWidth: "64%",
-        }}
-      ></Card>
-      <div
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
-          borderRadius: "8px",
-          marginBottom: "10px",
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <div>
-          <h1>Trip Treasure</h1>
-          <h2>Đăng nhập</h2>
-          <Form
-            name="register"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập tên người dùng hoặc email!",
-                },
-              ]}
-            >
-              <Input placeholder="Tên người dùng hoặc email" />
-            </Form.Item>
+      <div className="container mx-auto mt-10 ">
+        <div
+          className="max-w-md mx-auto bg-blue p-5 rounded-md shadow-md "
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            marginTop: "123px",
+          }}
+        >
+          <h2 className="text-2xl font-semibold text-center mb-5">Đăng Nhập</h2>
 
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
-            >
-              <Input.Password placeholder="Mật khẩu" />
-            </Form.Item>
-
-            <Form.Item>
-              <Button type="primary" htmlType="submit" block>
-                Đăng nhập
-              </Button>
-            </Form.Item>
-
-            <div style={{ textAlign: "center" }}>
-              <p>Hoặc tiếp tục với:</p>
-              <Button type="default" icon={<i className="fab fa-facebook"></i>}>
-                Facebook
-              </Button>
-              <Button type="default" icon={<i className="fab fa-google"></i>}>
-                Google
-              </Button>
-              <Button type="default" icon={<i className="fab fa-google"></i>}>
-                Gmail
-              </Button>
+          <form name="registration" onSubmit={onFinish}>
+            <div className="mb-4">
+              <label
+                className="block text-black-400 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <div className="flex items-center rounded-full bg-opacity-50 bg-white bg-blur w-full py-2 px-3">
+                <FontAwesomeIcon
+                  icon={faEnvelope}
+                  className="text-black-400 mr-2"
+                />
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  className="w-full outline-none bg-transparent"
+                />
+              </div>
             </div>
-          </Form>
+
+            <div className="mb-4">
+              <label
+                className="block text-black-400 text-sm font-bold mb-2"
+                htmlFor="confirm"
+              >
+                Mật khẩu
+              </label>
+              <div className="flex items-center rounded-full bg-opacity-50 bg-white bg-blur w-full py-2 px-3">
+                <FontAwesomeIcon
+                  icon={faLock}
+                  className="text-black-400 mr-2"
+                />
+                <input
+                  type="password"
+                  id="confirm"
+                  name="confirm"
+                  placeholder="Mật khẩu"
+                  className="w-full outline-none bg-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded-full w-full hover:bg-blue-600"
+              >
+                Đăng Nhập
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default Login;

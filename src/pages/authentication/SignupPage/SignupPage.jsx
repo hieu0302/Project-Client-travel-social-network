@@ -1,176 +1,132 @@
-import React from "react";
-import { Form, Input, Button, Checkbox, Card } from "antd";
-import { useNavigate } from "react-router-dom";
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
-const SignupPage = () => {
+const Signup = () => {
   const onFinish = (values) => {
-    console.log(values);
+    console.log("Received values:", values);
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-  const navigate = useNavigate();
-
-  const handleRegisterClick = () => {
-    navigate("/login");
-  };
+  const backgroundImageUrl =
+    "https://www.anhngumshoa.com/uploads/images/userfiles/hoatdongngoaikhoa/travel-agency-merchant-account.jpg";
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
-        height: "100vh", // Use viewport height
-        gap: "50px",
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        height: "100vh",
+        width: "100vw",
       }}
     >
-      <Card
-        style={{
-          flex: "1",
-          backgroundImage: `url('https://www.shutterstock.com/image-vector/airplane-cloud-blue-passport-luggage-600nw-2305845281.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          maxWidth: "70%",
-        }}
-      ></Card>
-      <div
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.8)",
+      <div className="container mx-auto mt-10 ">
+        <div
+          className="max-w-md mx-auto bg-blue p-5 rounded-md shadow-md"
+          style={{ backgroundColor: "rgba(255, 255, 255, 0.7)" }}
+        >
+          <h2 className="text-2xl font-semibold text-center mb-5">Đăng Ký</h2>
 
-          borderRadius: "8px",
-          marginBottom: "10px",
-          display: "flex",
-          justifyContent: "center",
-          paddingRight: "100px",
-        }}
-      >
-        <div>
-          <h1>Trip Treasure</h1>
-          <h2>Đăng kí</h2>
-          <Form
-            name="register"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: "Vui lòng nhập tên Họ và tên!" },
-              ]}
-            >
-              <Input
-                placeholder="Họ và tên"
-                prefix={<UserOutlined className="site-form-item-icon" />}
-              />
-            </Form.Item>
+          <form name="registration" onSubmit={onFinish}>
+            <div className="mb-4">
+              <label
+                className="block text-black-400 text-sm font-bold mb-2 "
+                htmlFor="username"
+              >
+                Tên người dùng
+              </label>
+              <div className="flex items-center rounded-full bg-opacity-50 bg-white bg-blur w-full py-2 px-3">
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-black-400 mr-2"
+                />
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Tên người dùng"
+                  className="w-full outline-none bg-transparent"
+                />
+              </div>
+            </div>
 
-            <Form.Item
-              name="email"
-              rules={[
-                { required: true, message: "Vui lòng nhập địa chỉ email!" },
-                { type: "email", message: "Địa chỉ email không hợp lệ!" },
-              ]}
-            >
-              <Input
-                placeholder="Email"
-                prefix={<MailOutlined className="site-form-item-icon" />}
-              />
-            </Form.Item>
-            <Form.Item
-              name="username"
-              rules={[
-                { required: true, message: "Vui lòng nhập tên Tên đăng kí!" },
-              ]}
-            >
-              <Input
-                placeholder="Tên đăng kí"
-                prefix={<UserOutlined className="site-form-item-icon" />}
-              />
-            </Form.Item>
+            <div className="mb-4">
+              <label
+                className="block text-black-400 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <div className="flex items-center rounded-full bg-opacity-50 bg-white bg-blur w-full py-2 px-3">
+                <FontAwesomeIcon
+                  icon={faEnvelope}
+                  className="text-black-400 mr-2"
+                />
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  className="w-full outline-none bg-transparent"
+                />
+              </div>
+            </div>
 
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
-            >
-              <Input.Password
-                placeholder="Mật khẩu"
-                prefix={<LockOutlined className="site-form-item-icon" />}
-              />
-            </Form.Item>
+            <div className="mb-4">
+              <label
+                className="block text-black-400 text-sm font-bold mb-2"
+                htmlFor="confirm"
+              >
+                Mật khẩu
+              </label>
+              <div className="flex items-center rounded-full bg-opacity-50 bg-white bg-blur w-full py-2 px-3">
+                <FontAwesomeIcon
+                  icon={faLock}
+                  className="text-black-400 mr-2"
+                />
+                <input
+                  type="password"
+                  id="confirm"
+                  name="confirm"
+                  placeholder="Mật khẩu"
+                  className="w-full outline-none bg-transparent"
+                />
+              </div>
+            </div>
 
-            <Form.Item
-              name="confirm"
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                { required: true, message: "Vui lòng xác nhận mật khẩu!" },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject("Mật khẩu xác nhận không khớp!");
-                  },
-                }),
-              ]}
-            >
-              <Input.Password
-                placeholder="Xác nhận mật khẩu"
-                prefix={<LockOutlined className="site-form-item-icon" />}
-              />
-            </Form.Item>
+            <div className="mb-4">
+              <label
+                className="block text-black-400 text-sm font-bold mb-2"
+                htmlFor="confirm"
+              >
+                Xác nhận mật khẩu
+              </label>
+              <div className="flex items-center rounded-full bg-opacity-50 bg-white bg-blur w-full py-2 px-3">
+                <FontAwesomeIcon
+                  icon={faLock}
+                  className="text-black-400 mr-2"
+                />
+                <input
+                  type="password"
+                  id="confirm"
+                  name="confirm"
+                  placeholder="Xác nhận mật khẩu"
+                  className="w-full outline-none bg-transparent"
+                />
+              </div>
+            </div>
 
-            <Form.Item
-              name="agreement"
-              valuePropName="checked"
-              rules={[
-                {
-                  validator: (_, value) =>
-                    value
-                      ? Promise.resolve()
-                      : Promise.reject(
-                          "Bạn phải đồng ý với Điều khoản sử dụng!"
-                        ),
-                },
-              ]}
-            >
-              <Checkbox>
-                Tạo một tài khoản có nghĩa là bạn đồng ý với Điều khoản sử dụng.
-              </Checkbox>
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                onClick={handleRegisterClick}
+            <div className="mb-4">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded-full w-full hover:bg-blue-600"
               >
                 Đăng Ký
-              </Button>
-            </Form.Item>
-
-            <div style={{ textAlign: "center" }}>
-              <p>Hoặc tiếp tục với:</p>
-              <Button type="default" icon={<i className="fab fa-facebook"></i>}>
-                Facebook
-              </Button>
-              <Button type="default" icon={<i className="fab fa-google"></i>}>
-                Google
-              </Button>
-              <Button type="default" icon={<i className="fab fa-google"></i>}>
-                Gmail
-              </Button>
+              </button>
             </div>
-          </Form>
+          </form>
         </div>
       </div>
     </div>
   );
 };
 
-export default SignupPage;
+export default Signup;
