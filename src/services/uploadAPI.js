@@ -1,10 +1,5 @@
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "http://localhost:3001/api/v1",
-  timeout: 10000,
-});
-const UploadImage = {
+import api from "./axiosInstance";
+const UploadImageAPI = {
   uploadImage: (body) => {
     const url = "/upload/images";
     return api.post(url, body, {
@@ -14,4 +9,4 @@ const UploadImage = {
     });
   },
 };
-export default UploadImage;
+export default UploadImageAPI;
