@@ -4,10 +4,11 @@ import profilePage from "../pages/Profile/profilePage";
 import User from "../pages/User/user";
 import LoginPage from "../pages/authentication/LoginPage/LoginPage";
 import SignupPage from "../pages/authentication/SignupPage/SignupPage";
+import Authen from "../pages/authentication/authen";
 
 const publicRoutes = [
-  { path: "/login", component: LoginPage },
-  { path: "/signup", component: SignupPage },
+  { path: "/login", component: Authen },
+  { path: "/signup", component: Authen },
 ];
 
 const privateRoutes = [
