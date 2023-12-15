@@ -14,6 +14,16 @@ const PostsAPI = {
     const url = "/posts";
     return api.post(url, data);
   },
+
+  update: (id, data) => {
+    const url = `/posts/${id}`;
+    return api.put(url, data);
+  },
+
+  deleteByID: (id) => {
+    const url = `/posts/${id}`;
+    return api.delete(url);
+  },
 };
 
 export default PostsAPI;

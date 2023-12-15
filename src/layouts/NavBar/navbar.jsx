@@ -7,8 +7,10 @@ import {
   RiInboxArchiveLine,
   RiEarthLine,
   RiFileUserLine,
+  RiLogoutBoxLine,
 } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
+import { message } from "antd";
 
 const menuItems = [
   { icon: RiHomeWifiLine, text: "Trang Chủ", to: "/posts" },
@@ -20,6 +22,11 @@ const menuItems = [
 ];
 
 const NavBar = () => {
+  const handleLogOut = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   return (
     <section className="h-screen border sticky top-0">
       <div className="font-nunito text-lg h-screen flex flex-col gap-5 p-10 sticky top-5 w-80">
@@ -44,6 +51,14 @@ const NavBar = () => {
               </NavLink>
             </div>
           ))}
+        </div>
+        <div>
+          <button
+            onClick={handleLogOut}
+            className="flex gap-5 items-center rounded-lg hover:font-extrabold hover:bg-slate-100 h-10 hover:scale-105 transform transition duration-300"
+          >
+            <RiLogoutBoxLine size={30} /> <p>Đăng xuất</p>
+          </button>
         </div>
       </div>
     </section>

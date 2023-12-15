@@ -8,6 +8,7 @@ import {
   Form,
   message,
 } from "antd";
+import dayjs from "dayjs";
 import { FaPersonWalkingLuggage } from "react-icons/fa6";
 import { GrGallery } from "react-icons/gr";
 import { MdOutlinePublic } from "react-icons/md";
@@ -16,25 +17,32 @@ import InputEmoji from "react-input-emoji";
 import ImgCrop from "antd-img-crop";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import UploadAvatar from "./UploadImage/uploadImage";
+
 import PostsAPI from "../../services/postsAPI";
 import { boolean } from "yup";
+import UploadImage from "./UploadImage/uploadImage";
 
 const { RangePicker } = DatePicker;
-const dateFormat = "DD/MM/YYYY";
 
 const CreatePost = () => {
   const initialValues = {
     public: boolean,
     title: "",
     image: "",
+    startDay: "",
+    endDay: "",
+    location: "",
   };
 
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
   const [value, setValue] = useState(initialValues);
   const [cloudinaryUrl, setCloudinaryUrl] = useState([]);
+  console.log(currentUser);
+
+  const dateFormat = "DD/MM/YYYY";
+
+  const customFormat = (value) => value.format(dateFormat);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -55,14 +63,21 @@ const CreatePost = () => {
   console.log(value);
   const onClickCreatePost = async () => {
     try {
-      const newData = { userId: currentUser._id, ...value, ...cloudinaryUrl };
-      console.log("Hieu", newData);
+      const newData = {
+        userId: currentUser._id,
+        username: currentUser.username,
+        avatar: currentUser.avatar,
+        ...value,
+        ...cloudinaryUrl,
+      };
       await PostsAPI.createPost(newData);
-      message.success("Cập nhật thông tin thành công.");
+      message.success("Tạo bài viết mới thành công");
+      setIsModalOpen(false);
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <>
       <div className="flex gap-5 my-10">
@@ -96,13 +111,13 @@ const CreatePost = () => {
           ]}
         >
           <Form>
-            <div className="flex items-center gap-5">
+            <div className="flex gap-5">
               <img
-                src="https://picsum.photos/200/300"
-                className=" h-12 w-12 rounded-full border-2 border-white"
+                src={currentUser.avatar}
+                className=" h-14 w-14 rounded-full border-2 border-white"
               />
               <div>
-                <p className="font-bold text-base">Tên người dùng</p>
+                <p className="font-bold text-base">{currentUser.username}</p>
                 <Form.Item
                   name="public"
                   rules={[
@@ -151,7 +166,7 @@ const CreatePost = () => {
               </Form.Item>
             </div>
             <Form.Item name="avatar" valuePropName="fileList">
-              <UploadAvatar
+              <UploadImage
                 setUrl={(link) =>
                   setCloudinaryUrl({ ...cloudinaryUrl, image: link })
                 }
@@ -177,7 +192,17 @@ const CreatePost = () => {
             <div className=" mx-8 my-5 ">
               <p className="text-base font-bold">Thời gian chuyến đi: </p>
               <Space className="m-2" direction="vertical" size={20}>
-                <RangePicker bordered={false} format={dateFormat} />
+                <RangePicker
+                  onChange={(e) =>
+                    setValue({
+                      ...value,
+                      startDay: dayjs(e[0]["$d"]).format("DD/MM/YYYY"),
+                      endDay: dayjs(e[1]["$d"]).format("DD/MM/YYYY"),
+                    })
+                  }
+                  bordered={false}
+                  format={dateFormat}
+                />
               </Space>
             </div>
             <div className=" mx-8 my-5 ">
@@ -185,6 +210,9 @@ const CreatePost = () => {
               <Input
                 bordered={false}
                 placeholder="Điểm đến chuyến đi của bạn"
+                onChange={(e) =>
+                  setValue({ ...value, location: e.target.value })
+                }
               />
             </div>
           </Form>

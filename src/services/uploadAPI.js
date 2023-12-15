@@ -8,5 +8,13 @@ const UploadImageAPI = {
       },
     });
   },
+  uploadAvatar: (body) => {
+    const url = "/upload/avatar";
+    return api.post(url, body, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+  },
 };
 export default UploadImageAPI;

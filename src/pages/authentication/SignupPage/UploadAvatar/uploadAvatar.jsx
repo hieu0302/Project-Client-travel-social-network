@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { UploadOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload, Spin } from "antd";
-import UploadImageAPI from "../../../services/uploadAPI";
+import UploadImageAPI from "../../../../services/uploadAPI.js";
 import { useSelector } from "react-redux";
-import Dragger from "antd/es/upload/Dragger";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -13,14 +12,14 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-const UploadImage = ({ setUrl }) => {
+const UploadAvatar = ({ setUrl }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
   //   const { activePage, isEditingPage } = useSelector((state) => state.page);
-  //   const { currentUser, openEditProfile } = useSelector((state) => state.user);
+  //   const { currentUser } = useSelector((state) => state.user);
 
   //   useEffect(() => {
   //     if (isEditingPage) {
@@ -33,6 +32,7 @@ const UploadImage = ({ setUrl }) => {
   //       setFileList([{ url: currentUser.avatar[0] }]);
   //     }
 
+  //     // eslint-disable-next-line react-hooks/exhaustive-deps
   //   }, [isEditingPage, openEditProfile]);
 
   const handleCancel = () => setPreviewOpen(false);
@@ -56,7 +56,8 @@ const UploadImage = ({ setUrl }) => {
     const formData = new FormData();
     formData.append("image", info.file);
     try {
-      const res = await UploadImageAPI.uploadImage(formData);
+      const res = await UploadImageAPI.uploadAvatar(formData);
+      console.log(res.data.url);
       if (res.data.url) {
         setUrl(res.data.url);
         handleChange(info);
@@ -80,10 +81,8 @@ const UploadImage = ({ setUrl }) => {
       <div>
         {!uploading && (
           <>
-            <UploadOutlined style={{ fontSize: "20px" }} />
-            <div className="mt-2">
-              Kéo thả hoặc chọn flie ảnh nền cho chuyến đi
-            </div>
+            <PlusOutlined />
+            <div className="mt-2">Chọn ảnh</div>
           </>
         )}
         {uploading && (
@@ -99,9 +98,9 @@ const UploadImage = ({ setUrl }) => {
 
   return (
     <>
-      <Dragger
+      <Upload
         accept=".png,.jpg,.jpeg,.webp"
-        listType="picture"
+        listType="picture-circle"
         fileList={fileList}
         onPreview={handlePreview}
         onChange={handleUploadImage}
@@ -119,7 +118,7 @@ const UploadImage = ({ setUrl }) => {
         }}
       >
         {fileList.length >= 1 ? null : uploadButton}
-      </Dragger>
+      </Upload>
       <Modal
         open={previewOpen}
         title={previewTitle}
@@ -131,4 +130,4 @@ const UploadImage = ({ setUrl }) => {
     </>
   );
 };
-export default UploadImage;
+export default UploadAvatar;

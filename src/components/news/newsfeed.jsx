@@ -1,8 +1,14 @@
-import React, { useEffect } from "react";
-import { Input } from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Dropdown, Space, Button, message, Modal } from "antd";
 import { IoLocationOutline } from "react-icons/io5";
-import { PiClockClockwise } from "react-icons/pi";
-import { MdFlightTakeoff, MdFlightLand } from "react-icons/md";
+import { PiClockClockwise, PiDotsThreeCircle } from "react-icons/pi";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import {
+  MdFlightTakeoff,
+  MdFlightLand,
+  MdOutlineEditNote,
+  MdDeleteOutline,
+} from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -13,13 +19,19 @@ import {
 } from "react-icons/go";
 import CreatePost from "../../layouts/createPost/createPost";
 import PostsAPI from "../../services/postsAPI.js";
+import UserAPI from "../../services/userAPI.js";
 import { fetchAllPosts } from "../../redux/posts/postActions.js";
+import moment from "moment";
+import "moment/dist/locale/vi";
+
+moment.locale("vi");
+
+const { confirm } = Modal;
 
 const News = () => {
   const { postsData } = useSelector((state) => state.posts);
+  const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  console.log(postsData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +45,55 @@ const News = () => {
     fetchData();
   }, []);
 
+  const ShowConfirm = (id) => {
+    confirm({
+      title: "Xác nhận xoá bài viết:",
+      icon: <ExclamationCircleFilled />,
+      content: "Bạn chắc chắn muốn xoá bài viết này?",
+      okType: "danger",
+      okText: "Đồng ý",
+      cancelText: "Huỷ bỏ",
+      onOk() {
+        handleDelete(id);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
+
+  const handleClick = (key, id) => {
+    console.log(id);
+    console.log(key);
+    if (key == 1) {
+      ShowConfirm(id);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await PostsAPI.deleteByID(id);
+      console.log(id);
+      message.success("Đã xoá bài viết");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const items = [
+    {
+      icon: <MdOutlineEditNote size={20} />,
+      label: `Chỉnh sửa`,
+      key: "0",
+    },
+    {
+      icon: <MdDeleteOutline size={20} />,
+      label: "Xoá bài viết",
+      key: "1",
+      danger: true,
+    },
+  ];
+
   return (
     <div className="flex flex-col items-center gap-5 w-2/3">
       <div>
@@ -43,33 +104,51 @@ const News = () => {
           key={index}
           className=" bg-white w-3/4 border-solid border-2 mb-3 p-5 rounded-2xl"
         >
-          <div className="flex items-center gap-5">
-            <div className=" flex justify-center items-center h-14 w-14 bg-gradient-to-r from-indigo-600 to-blue-300  rounded-full">
-              <img
-                src="https://picsum.photos/200/300"
-                className=" h-12 w-12 rounded-full border-2 border-white"
-              />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-5">
+              <div className=" flex justify-center items-center h-14 w-14 bg-gradient-to-r from-indigo-600 to-blue-300  rounded-full">
+                <img
+                  src={item.avatar}
+                  className=" h-12 w-12 rounded-full border-2 border-white"
+                />
+              </div>
+              <div>
+                <p className=" font-extrabold font-nunito text-lg">
+                  {item.username}
+                </p>
+                <p className=" flex gap-3 text-gray-500">
+                  <PiClockClockwise size={20} color="red" />
+                  Chuyến đi đã được khởi tạo từ{" "}
+                  {moment(new Date(item.createAt)).fromNow()}
+                </p>
+              </div>
             </div>
             <div>
-              <p className=" font-extrabold font-nunito text-lg">
-                Tên Người dùng
-              </p>
-              <p className=" flex gap-3 text-gray-500">
-                <PiClockClockwise size={20} color="red" />
-                Chuyến đi đã được khởi tạo từ 30 phút trước
-              </p>
+              {currentUser._id === item.userId ? (
+                <Dropdown
+                  menu={{
+                    items,
+                    onClick: (e) => handleClick(e.key, item._id),
+                  }}
+                  trigger={["click"]}
+                >
+                  <Button type="link" className=" text-black">
+                    <PiDotsThreeCircle size={25} />
+                  </Button>
+                </Dropdown>
+              ) : null}
             </div>
           </div>
           <div className="mt-5 relative">
             <img
               className=" w-full h-96 object-cover rounded-xl border "
-              src="https://picsum.photos/200"
+              src={item.image[0]}
             />
             <div className=" text-white  font-bold absolute bottom-10 left-5 drop-shadow-2xl">
               <button className="text-4xl">{item.title}</button>
               <p className="text-xl flex gap-2">
                 <IoLocationOutline />
-                Địa điểm: {item.title}
+                Địa điểm: {item.location}
               </p>
               <p className="flex gap-3">
                 <MdFlightTakeoff size={20} /> Bắt đầu: {item.startDay}
