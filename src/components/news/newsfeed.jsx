@@ -31,7 +31,13 @@ const { confirm } = Modal;
 const News = () => {
   const { postsData } = useSelector((state) => state.posts);
   const { currentUser } = useSelector((state) => state.auth);
+  const [reloadPosts, setReloadPosts] = useState(null);
   const dispatch = useDispatch();
+
+  const handleChildButtonClick = (randomValue) => {
+    setReloadPosts(randomValue);
+  };
+  console.log(reloadPosts);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +49,7 @@ const News = () => {
     };
 
     fetchData();
-  }, []);
+  }, [reloadPosts]);
 
   const ShowConfirm = (id) => {
     confirm({
@@ -55,6 +61,14 @@ const News = () => {
       cancelText: "Huỷ bỏ",
       onOk() {
         handleDelete(id);
+        // const fetchData = async () => {
+        //   try {
+        //     dispatch(fetchAllPosts());
+        //   } catch (error) {
+        //     console.log(error);
+        //   }
+        // };
+        // fetchData();
       },
       onCancel() {
         console.log("Cancel");
@@ -97,7 +111,7 @@ const News = () => {
   return (
     <div className="flex flex-col items-center gap-5 w-2/3">
       <div>
-        <CreatePost />
+        <CreatePost onChildButtonClick={handleChildButtonClick} />
       </div>
       {postsData.map((item, index) => (
         <div

@@ -24,7 +24,7 @@ import UploadImage from "./UploadImage/uploadImage";
 
 const { RangePicker } = DatePicker;
 
-const CreatePost = () => {
+const CreatePost = ({ onChildButtonClick }) => {
   const initialValues = {
     public: boolean,
     title: "",
@@ -38,7 +38,6 @@ const CreatePost = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState(initialValues);
   const [cloudinaryUrl, setCloudinaryUrl] = useState([]);
-  console.log(currentUser);
 
   const dateFormat = "DD/MM/YYYY";
 
@@ -62,6 +61,7 @@ const CreatePost = () => {
   };
   console.log(value);
   const onClickCreatePost = async () => {
+    const randomValue = Math.random();
     try {
       const newData = {
         userId: currentUser._id,
@@ -72,6 +72,7 @@ const CreatePost = () => {
       };
       await PostsAPI.createPost(newData);
       message.success("Tạo bài viết mới thành công");
+      onChildButtonClick(randomValue);
       setIsModalOpen(false);
     } catch (err) {
       console.log(err);

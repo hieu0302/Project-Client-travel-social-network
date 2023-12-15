@@ -107,6 +107,7 @@ const Signup = () => {
             />
           </Form.Item>
           <Form.Item>
+            <p className=" font-bold"> Tải lên Avatar của bạn: </p>
             <UploadAvatar
               setUrl={(link) =>
                 setCloudinaryUrl({ ...cloudinaryUrl, avatar: link })
