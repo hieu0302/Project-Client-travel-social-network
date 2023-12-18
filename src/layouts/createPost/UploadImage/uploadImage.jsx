@@ -49,6 +49,7 @@ const UploadImage = ({ setUrl }) => {
   };
 
   const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  console.log(fileList);
 
   const handleUploadImage = async (info) => {
     if (info.file.status === "removed") return;

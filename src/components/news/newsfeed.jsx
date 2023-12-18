@@ -3,6 +3,7 @@ import { Input, Dropdown, Space, Button, message, Modal } from "antd";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiClockClockwise, PiDotsThreeCircle } from "react-icons/pi";
 import { ExclamationCircleFilled } from "@ant-design/icons";
+import EditPostModal from "../EditPostModal/EditPostModal.jsx";
 import {
   MdFlightTakeoff,
   MdFlightLand,
@@ -63,8 +64,9 @@ const News = () => {
   };
 
   const handleClick = (key, id) => {
-    console.log(id);
-    console.log(key);
+    if (key == 0) {
+      handleEdit(id);
+    }
     if (key == 1) {
       ShowConfirm(id);
     }
@@ -80,6 +82,44 @@ const News = () => {
     }
   };
 
+  const handleEdit = (postId) => {
+    const selectedPost = postsData.find((post) => post._id === postId);
+    setEditModalData({
+      post: selectedPost,
+      visible: true,
+    });
+  };
+
+  const handleEditModalCancel = () => {
+    setEditModalData({
+      post: null,
+      visible: false,
+    });
+  };
+
+  const handleEditModalSave = () => {
+    setEditModalData({
+      post: null,
+      visible: false,
+    });
+  };
+
+  // const [editModalVisible, setEditModalVisible] = useState(false);
+  // const [selectedPost, setSelectedPost] = useState(null);
+
+  // const handleEdit = (post) => {
+  //   setSelectedPost(post);
+  //   setEditModalVisible(true);
+  // };
+
+  // const handleEditModalCancel = () => {
+  //   setEditModalVisible(false);
+  // };
+
+  // const handleEditModalSave = () => {
+  //   setEditModalVisible(false);
+  // };
+
   const items = [
     {
       icon: <MdOutlineEditNote size={20} />,
@@ -93,6 +133,11 @@ const News = () => {
       danger: true,
     },
   ];
+
+  const [editModalData, setEditModalData] = useState({
+    post: null,
+    visible: false,
+  });
 
   return (
     <div className="flex flex-col items-center gap-5 w-2/3">
@@ -132,13 +177,28 @@ const News = () => {
                   }}
                   trigger={["click"]}
                 >
-                  <Button type="link" className=" text-black">
+                  <Button type="link" className=" text-blue-100">
                     <PiDotsThreeCircle size={25} />
                   </Button>
                 </Dropdown>
               ) : null}
+              <Button type="link" className="text-black">
+                <MdOutlineEditNote size={20} />
+              </Button>
             </div>
           </div>
+          {console.log(editModalData)}
+          {editModalData.visible && (
+            <EditPostModal
+              post={editModalData.post}
+              onCancel={() => setEditModalData({ post: null, visible: false })}
+              onSave={() => {
+                // Handle saving changes or updating UI after editing
+                setEditModalData({ post: null, visible: false });
+              }}
+            />
+          )}
+
           <div className="mt-5 relative">
             <img
               className=" w-full h-96 object-cover rounded-xl border "
