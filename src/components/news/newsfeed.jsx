@@ -20,7 +20,6 @@ import {
 } from "react-icons/go";
 import CreatePost from "../../layouts/createPost/createPost";
 import PostsAPI from "../../services/postsAPI.js";
-import UserAPI from "../../services/userAPI.js";
 import { fetchAllPosts } from "../../redux/posts/postActions.js";
 import moment from "moment";
 import "moment/dist/locale/vi";

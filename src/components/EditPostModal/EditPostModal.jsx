@@ -19,6 +19,8 @@ import UploadImage from "../../layouts/createPost/UploadImage/uploadImage";
 import PostsAPI from "../../services/postsAPI";
 import dayjs from "dayjs";
 import { BsTrash } from "react-icons/bs";
+import { fetchAllPosts } from "../../redux/posts/postActions";
+import { useDispatch } from "react-redux";
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -33,6 +35,7 @@ const EditPostModal = ({ post, onCancel, onSave }) => {
     location: post.location,
   });
   const [cloudinaryUrl, setCloudinaryUrl] = useState(post.image);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setEditedData({
@@ -57,6 +60,7 @@ const EditPostModal = ({ post, onCancel, onSave }) => {
         location: editedData.location,
       };
       await PostsAPI.update(post._id, updatedData);
+      dispatch(fetchAllPosts());
       message.success("Đã cập nhật bài viết");
       onSave(); // Update UI or refetch the post list
       onCancel();
@@ -131,9 +135,7 @@ const EditPostModal = ({ post, onCancel, onSave }) => {
         {/* Image Upload Section */}
         <Form.Item name="avatar" valuePropName="fileList">
           <UploadImage
-            setUrl={(link) =>
-              setCloudinaryUrl({ ...cloudinaryUrl, image: link })
-            }
+            setUrl={(link) => setEditedData({ ...editedData, image: link })}
           />
         </Form.Item>
 
