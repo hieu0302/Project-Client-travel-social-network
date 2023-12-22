@@ -1,7 +1,38 @@
-import React from "react";
-import PostItem from "./postItem/postItem";
-import Navbar from "./navbar/navbar";
+import React, { useState, useEffect } from 'react';
+import PostsAPI from "../../services/postsAPI.js";
+import { useDispatch, useSelector } from "react-redux";
+import PostItem from '../../components/postItem/postItem';
+import UploadAvatar from "../authentication/SignupPage/UploadAvatar/uploadAvatar";
+import {  fetchPostByUser } from '../../redux/posts/postActions';
+
 const profilePage = () => {
+  const { postsData } = useSelector((state) => state.posts);
+  const { currentUser } = useSelector((state) => state.auth);  
+  const [reloadPosts, setReloadPosts] = useState(null);
+  const dispatch = useDispatch();
+
+
+
+  const handleChildButtonClick = (randomValue) => {
+    setReloadPosts(randomValue);
+  };
+
+  // Đếm tổng số bài viết từ danh sách đã lấy được
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        dispatch(fetchPostByUser());
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const totalPosts = postsData.length
+  
+
   return (
     <div className=" w-full ">
       <link
@@ -52,12 +83,14 @@ const profilePage = () => {
               <div className="px-6">
                 <div className="flex flex-wrap justify-center">
                   <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                    <div className="relative">
-                      <img
-                        alt="..."
-                        src="https://img.thuthuatphanmem.vn/uploads/2018/09/22/avatar-trang-den-dep_015640236.png"
-                        className="bg-gray-200 shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                      />
+                    <div className="relative ">
+                    <img
+                    alt="..."
+                    src={currentUser.avatar}
+                    className="bg-gray-200 shadow-xl h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px rounded-full"
+                    style={{ width: '150px', height: '150px' }} 
+                  />
+
                       <label
                         htmlFor="upload"
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full absolute bottom-0 left-0 m-2 cursor-pointer"
@@ -74,6 +107,11 @@ const profilePage = () => {
                           <path d="M19 13H13v6h-2v-6H5v-2h6V5h2v6h6z" />
                         </svg>
                       </label>
+                      {/* <UploadAvatar
+              setUrl={(link) =>
+                setCloudinaryUrl({ ...cloudinaryUrl, avatar: link })
+              }
+            /> */}
                     </div>
                   </div>
                   <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
@@ -93,7 +131,7 @@ const profilePage = () => {
                           0
                         </span>
                         <span className="text-sm text-blueGray-400">
-                          Followwing
+                          Following
                         </span>
                       </div>
                       <div className="mr-4 p-3 text-center">
@@ -106,13 +144,13 @@ const profilePage = () => {
                       </div>
                       <div className="mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                          1
+                          0
                         </span>
                         <span className="text-sm text-blueGray-400">Ablum</span>
                       </div>
                       <div className="lg:mr-4 p-3 text-center">
                         <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">
-                          2
+                        {totalPosts}
                         </span>
                         <span className="text-sm text-blueGray-400">
                           Checkin
@@ -122,8 +160,8 @@ const profilePage = () => {
                   </div>
                 </div>
                 <div className="text-center mt-2">
-                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 ">
-                    Wade Warren
+                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700  ">
+                    {currentUser.username}
                   </h3>
 
                   <div className="flex ml-0 pl-0 ">
@@ -145,12 +183,22 @@ const profilePage = () => {
                       </div>
 
                       <div className="text-2xl font-semibold leading-normal mb-2 text-blueGray-700 ">
-                        Bài Viết đã lưu
+
                       </div>
                     </div>
 
-                    <div className="w-2/3  text-blueGray-600 mt-10">
-                      <PostItem />
+                    <div className=" w-2/3 text-blueGray-600 mt-10 mb-10">
+
+                    {postsData.map((item, index) => (
+      <PostItem 
+      key={index}
+      props={item}
+      currentUser={currentUser} // Truyền currentUser xuống PostItem
+     
+    
+                   
+      />
+    ))}
                     </div>
                   </div>
                 </div>

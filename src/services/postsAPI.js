@@ -1,14 +1,23 @@
 import axios from "axios";
+import api from "./axiosInstance";
 
-const api = axios.create({
-  baseURL: "http://localhost:3001/api/v1",
-  timeout: 10000,
-});
+
 const PostsAPI = {
   getALLPosts: () => {
     const url = "/posts";
     return api.get(url);
   },
+  getPostsByUserId: () => {
+    const url = `/posts/getPostByUserId`;
+    return api.get(url);
+  },
+  getPostSave: (id) => {
+    const url = `/posts/saved-posts/${id}`;
+    return api.get(url);
+  },
+  putSavePost:(id) => {
+    return api.put(`/posts/${id}/save`);
+},
 
   createPost: (data) => {
     const url = "/posts";
@@ -24,6 +33,8 @@ const PostsAPI = {
     const url = `/posts/${id}`;
     return api.delete(url);
   },
+
+  
 };
 
 export default PostsAPI;

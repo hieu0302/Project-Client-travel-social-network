@@ -26,6 +26,7 @@ const { RangePicker } = DatePicker;
 
 const CreatePost = ({ onChildButtonClick }) => {
   const initialValues = {
+    id:"",
     public: boolean,
     title: "",
     image: "",
