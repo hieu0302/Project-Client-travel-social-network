@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 import { message } from "antd";
 
 const menuItems = [
-  { icon: RiHomeWifiLine, text: "Trang Chủ", to: "/posts" },
+  { icon: RiHomeWifiLine, text: "Trang Chủ", to: "/" },
   { icon: RiNotification3Line, text: "Thông báo", to: "/notify" },
   { icon: RiBookmark3Line, text: "Đã Lưu", to: "/bookmark" },
   { icon: RiInboxArchiveLine, text: "Hộp thư", to: "/inbox" },

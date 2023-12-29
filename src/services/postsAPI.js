@@ -5,10 +5,12 @@ const api = axios.create({
   timeout: 10000,
 });
 const PostsAPI = {
-  getALLPosts: () => {
-    const url = "/posts";
+  getALLPosts: (params) => {
+    const { limit = 3, page = 1, sort = "desc" } = params;
+    const url = `/posts?limit=${limit}&page=${page}&sort=${sort}`;
     return api.get(url);
   },
+  // const url = `/posts?limit=${limit}&page=${page}&sort=${sort}`;
 
   createPost: (data) => {
     const url = "/posts";

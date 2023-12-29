@@ -19,9 +19,20 @@ const Login = () => {
 
       if (accessToken) {
         localStorage.setItem(TOKEN_TYPES.ACCESS_TOKEN, accessToken);
-        await dispatch(fetchCurrentUser());
-        navigate("/posts");
-        message.success("Đăng nhập thành công!");
+        const infoUser = await dispatch(fetchCurrentUser());
+        console.log(infoUser);
+        if (response.status == 200) {
+          localStorage.setItem(
+            "userInfo",
+            JSON.stringify({
+              username: infoUser.payload.username,
+              idUser: infoUser.payload._id,
+              avatar: infoUser.payload.avatar,
+            })
+          );
+          navigate("/");
+          message.success("Đăng nhập thành công!");
+        }
       }
     } catch (error) {
       console.log(error);

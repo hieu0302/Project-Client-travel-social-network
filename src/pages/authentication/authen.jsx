@@ -12,7 +12,7 @@ const Authen = () => {
   const location = useLocation();
 
   if (isAuthenticated) {
-    return <Navigate to={"/posts"} />;
+    return <Navigate to={"/"} />;
   }
 
   const AuthenForm = () => {

@@ -21,10 +21,11 @@ import { useDispatch, useSelector } from "react-redux";
 import PostsAPI from "../../services/postsAPI";
 import { boolean } from "yup";
 import UploadImage from "./UploadImage/uploadImage";
+import { postSliceAction } from "../../redux/posts/postSlice";
 
 const { RangePicker } = DatePicker;
 
-const CreatePost = ({ onChildButtonClick }) => {
+const CreatePost = () => {
   const initialValues = {
     public: boolean,
     title: "",
@@ -53,13 +54,13 @@ const CreatePost = ({ onChildButtonClick }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleChange = (field, value) => {
-    setValue((prevValue) => ({
-      ...prevValue,
-      [field]: value,
-    }));
-  };
-  console.log(value);
+  // const handleChange = (field, value) => {
+  //   setValue((prevValue) => ({
+  //     ...prevValue,
+  //     [field]: value,
+  //   }));
+  // };
+  // console.log(value);
   const onClickCreatePost = async () => {
     const randomValue = Math.random();
     try {
@@ -72,8 +73,9 @@ const CreatePost = ({ onChildButtonClick }) => {
       };
       await PostsAPI.createPost(newData);
       message.success("Tạo bài viết mới thành công");
-      onChildButtonClick(randomValue);
+
       setIsModalOpen(false);
+      dispatch(postSliceAction.createPost(newData));
     } catch (err) {
       console.log(err);
     }

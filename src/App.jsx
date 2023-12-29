@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PrivateRoute from "./routes/privateRoute";
 import "./App.css";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -7,17 +7,24 @@ import { useDispatch, useSelector } from "react-redux";
 import NavBar from "./layouts/NavBar/navbar";
 import { TOKEN_TYPES } from "./utils/constants";
 import { fetchCurrentUser } from "./redux/user/userActions";
+import Logo from "./assets/Trip-removebg-preview.png";
+import { Alert, Flex, Spin } from "antd";
 
 const App = () => {
   const location = useLocation();
 
+  const [currentUser, setCurrentUser] = useState(null);
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   useEffect(() => {
     const accessToken = localStorage.getItem(TOKEN_TYPES.ACCESS_TOKEN);
+    // const userLocal = localStorage.getItem("userInfo");
+
     if (accessToken) {
-      dispatch(fetchCurrentUser());
+      dispatch(fetchCurrentUser()).then((result) => {
+        setCurrentUser(result);
+      });
     }
   }, []);
 
@@ -26,11 +33,11 @@ const App = () => {
       dispatch(fetchCurrentUser());
     }
   }, []);
-  const currentPath = location.pathname;
-  const excludePath = ["/login", "/signup"];
+  // const currentPath = location.pathname;
+  // const excludePath = ["/login", "/signup"];
   return (
     <div className="flex">
-      {isAuthenticated && !excludePath.includes(currentPath) && (
+      {isAuthenticated && (
         <div>
           <NavBar />
         </div>
@@ -52,7 +59,3 @@ const App = () => {
 };
 
 export default App;
-
-// if (route.isPrivated) {
-//   routeElement = <PrivateRoute component={Page} />;
-// }

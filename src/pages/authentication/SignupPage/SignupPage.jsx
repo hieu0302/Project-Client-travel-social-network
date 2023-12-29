@@ -18,12 +18,15 @@ const Signup = () => {
   const handleSignup = async (formValue) => {
     const { isAgreed, ...signupValue } = formValue;
     const newValue = { avatar: cloudinaryUrl.avatar[0], ...signupValue };
-    console.log(newValue);
+
     if (!isAgreed) return;
     try {
-      await AuthenAPI.signup(newValue);
-      message.success("Tạo tài khoản thành công!");
-      navigate("/login");
+      const response = await AuthenAPI.signup(newValue);
+      if (response.status == 200) {
+        navigate("/login");
+        message.success("Đăng nhập thành công!");
+      }
+     
     } catch (err) {
       // eslint-disable-next-line no-console
       console.log(err);

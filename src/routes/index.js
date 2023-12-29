@@ -12,7 +12,8 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-  { path: "/posts", component: NewsFeed },
+  { path: "/", component: NewsFeed },
+  // { path: "/posts", component: NewsFeed },
   { path: "/user", component: User },
   { path: "/notify", component: Notify },
   { path: "/profile", component: profilePage },
