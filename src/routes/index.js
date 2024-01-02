@@ -1,3 +1,4 @@
+import LandingPage from "../pages/authentication/LandingPage/LandingPage";
 import NewsFeed from "../pages/NewsFeed/newsfeed";
 import Notify from "../pages/Notify/notify";
 import profilePage from "../pages/Profile/profilePage";
@@ -9,6 +10,7 @@ import Authen from "../pages/authentication/authen";
 const publicRoutes = [
   { path: "/login", component: Authen },
   { path: "/signup", component: Authen },
+  { path: "/landingpage", component: LandingPage },
 ];
 
 const privateRoutes = [
