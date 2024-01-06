@@ -1,77 +1,65 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Input, Dropdown, Space, Button, message, Modal, Skeleton } from "antd";
+import { Input, Dropdown, Button, message, Modal, Skeleton } from "antd";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiClockClockwise, PiDotsThreeCircle } from "react-icons/pi";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import {
-  MdFlightTakeoff,
-  MdFlightLand,
-  MdOutlineEditNote,
-  MdDeleteOutline,
-} from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
+import { MdOutlineEditNote, MdDeleteOutline } from "react-icons/md";
+import moment from "moment";
 import InfiniteScroll from "react-infinite-scroll-component";
-import EmojiPicker from "emoji-picker-react";
 import {
   GoHeart,
   GoCommentDiscussion,
   GoShareAndroid,
   GoBookmark,
 } from "react-icons/go";
-import CreatePost from "../../layouts/createPost/createPost";
-import PostsAPI from "../../services/postsAPI.js";
-import UserAPI from "../../services/userAPI.js";
-import { fetchAllPosts } from "../../redux/posts/postActions.js";
-import moment from "moment";
+
 import "moment/dist/locale/vi";
-import { postSliceAction } from "../../redux/posts/postSlice.js";
-import { fetchAllComment } from "../../redux/comments/commentAction.js";
-import CommentAPI from "../../services/commentAPI.js";
-import ListComment from "../comments/comments.jsx";
-import { commentSliceAction } from "../../redux/comments/commentSlice.js";
-import Like from "../Like/like.jsx";
+import CreateAlbum from "../../layouts/CreateAlbum/CreateAlbum";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllAlbum } from "../../redux/album/albumAction";
+import AlbumAPI from "../../services/albumAPI";
+import { fetchAllComment } from "../../redux/comments/commentAction";
 import {
   fetchAllLike,
   fetchAllPostLiked,
   fetchCountLike,
-} from "../../redux/likes/likeAction.js";
-import { likeSliceAction } from "../../redux/likes/LikeSlice.js";
+} from "../../redux/likes/likeAction";
+import { commentSliceAction } from "../../redux/comments/commentSlice";
+import CommentAPI from "../../services/commentAPI";
+import Like from "../Like/like";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
-import AnimatedNumber from "react-animated-numbers";
+import { likeSliceAction } from "../../redux/likes/LikeSlice";
+import ListComment from "../comments/comments.jsx";
 
 moment.locale("vi");
 
 const { confirm } = Modal;
 
-const News = () => {
-  const { postsData, pagination, postId } = useSelector((state) => state.posts);
-
-  const { countLike } = useSelector((state) => state.like);
-
-  const [loading, setloading] = useState(true);
-
-  const { currentUser } = useSelector((state) => state.auth);
+const AlbumCard = () => {
   const dispatch = useDispatch();
-
+  const { albumData, pagination, albumId } = useSelector(
+    (state) => state.album
+  );
+  const { countLike } = useSelector((state) => state.like);
+  const [loading, setloading] = useState(true);
+  const { currentUser } = useSelector((state) => state.auth);
   const [page, setPage] = useState(1);
-
   const { currentPage, totalPages } = pagination || {};
-
-  const shouldFetchMorePost = currentPage < totalPages;
+  const shouldFetchMoreAlbum = currentPage < totalPages;
 
   useEffect(() => {
     setTimeout(() => {
       const payload = {
         page,
       };
-      dispatch(fetchAllPosts(payload));
+      dispatch(fetchAllAlbum(payload));
       setloading(false);
     }, 1000);
   }, [page]);
 
   useEffect(() => {
     if (loading == false) {
-      postId.forEach((item) => {
+      albumId.forEach((item) => {
         dispatch(fetchAllComment(item));
         dispatch(fetchCountLike(item));
         dispatch(fetchAllPostLiked({ idUser: currentUser._id, idPost: item }));
@@ -79,7 +67,7 @@ const News = () => {
     }
   }, [currentPage]);
 
-  const fetchMorePosts = () => {
+  const fetchMoreAlbum = () => {
     setPage(currentPage + 1);
   };
 
@@ -122,7 +110,7 @@ const News = () => {
       async onOk() {
         try {
           const result = await handleDelete(id);
-          dispatch(postSliceAction.deletePost(id));
+          // dispatch(postSliceAction.deletePost(id));
         } catch (error) {
           console.log(error);
         }
@@ -143,7 +131,7 @@ const News = () => {
 
   const handleDelete = async (id) => {
     try {
-      await PostsAPI.deleteByID(id);
+      await AlbumAPI.deleteByID(id);
       message.success("Đã xoá bài viết");
     } catch (err) {
       console.log(err);
@@ -171,6 +159,7 @@ const News = () => {
 
   const countLikeRender = (item) => {
     const result = countLike.find((i) => i.idPost == item);
+    console.log("ITEM::::", result);
 
     if (result) {
       if (result.countLike.length == 0) {
@@ -186,11 +175,11 @@ const News = () => {
       }
     }
   };
-
+  console.log("hahahaeueurheu::::", ListComment);
   return (
-    <div className="flex flex-col items-center gap-5 w-2/3 mb-6">
+    <div className="flex flex-col items-center gap-5 w-2/3">
       <div>
-        <CreatePost />
+        <CreateAlbum />
       </div>
       <span className="w-600  ">
         {loading && !currentPage && (
@@ -199,11 +188,11 @@ const News = () => {
       </span>
       <InfiniteScroll
         loader={<Skeleton active avatar paragraph={{ rows: 3 }} />}
-        dataLength={postsData.length}
-        next={fetchMorePosts}
-        hasMore={shouldFetchMorePost}
+        dataLength={albumData.length}
+        next={fetchMoreAlbum}
+        hasMore={shouldFetchMoreAlbum}
       >
-        {postsData.map((item, index) => (
+        {albumData.map((item, index) => (
           <div
             key={index}
             className=" bg-white w-700 border-solid border-2 mb-3 p-5 rounded-2xl"
@@ -222,7 +211,7 @@ const News = () => {
                   </p>
                   <p className=" flex gap-3 text-gray-500">
                     <PiClockClockwise size={20} color="red" />
-                    Chuyến đi đã được khởi tạo từ{" "}
+                    Album đã được khởi tạo từ{" "}
                     {moment(new Date(item.createdAt)).fromNow()}
                   </p>
                 </div>
@@ -243,24 +232,47 @@ const News = () => {
                 ) : null}
               </div>
             </div>
-            <div className="mt-5 relative">
-              <img
-                className=" w-full h-96 object-cover rounded-xl border "
-                src={item.image[0]}
-              />
-              <div className=" text-white  font-bold absolute bottom-10 left-5 drop-shadow-2xl">
-                <button className="text-4xl">{item.title}</button>
-                <p className="text-xl flex gap-2">
-                  <IoLocationOutline />
-                  Địa điểm: {item.location}
-                </p>
-                <p className="flex gap-3">
-                  <MdFlightTakeoff size={20} /> Bắt đầu: {item.startDay}
-                </p>
-                <p className="flex gap-3">
-                  <MdFlightLand size={20} /> Kết thúc: {item.endDay}
-                </p>
-              </div>
+            <div className="pt-3">
+              <button className="text-xl font-bold">{item.title}</button>
+            </div>
+            <div className="mt-5  rounded-xl grid grid-cols-2 grid-rows-2 gap-2 ">
+              <button className=" col-span-1 row-span-2">
+                <img
+                  className=" h-full w-full object-cover rounded-xl border  "
+                  src={item.image[0]}
+                />
+              </button>
+              <button className=" col-span-1">
+                <img
+                  className=" h-32 w-full object-cover rounded-xl border  "
+                  src={item.image[1]}
+                />
+              </button>
+
+              <button className=" relative col-span-1 ">
+                <div className=" absolute text-center rounded-xl w-full h-full bg-gray-400 bg-opacity-60 top-1/2 left-1/2 text-4xl translate-x-a translate-y-a">
+                  <div className="w-full h-full flex items-center justify-center">
+                    <b>{item.image.length - 3} + </b>
+                  </div>
+                </div>
+
+                <img
+                  className=" h-32 w-full object-cover rounded-xl border  "
+                  src={item.image[2]}
+                />
+              </button>
+            </div>
+            <div className=" pl-5 pt-5  font-bold w-full ">
+              <p className=" text-lg flex gap-2 items-center w-full">
+                <IoLocationOutline />
+                Địa điểm: {item.location}
+              </p>
+            </div>
+            <div className="flex  pt-3 pl-5">
+              <p>
+                <b className="w-full">{item.username}: </b>
+                {item.description}
+              </p>
             </div>
             <div className="flex justify-between p-3">
               <div className="flex gap-5 ">
@@ -269,7 +281,7 @@ const News = () => {
                     idPost: item._id,
                     username: currentUser.username,
                     currentPage: pagination.currentPage,
-                    postId: postId,
+                    albumId: albumId,
                     idUser: currentUser._id,
                     avatar: currentUser.avatar,
                   }}
@@ -288,6 +300,7 @@ const News = () => {
             <div className=" px-4">{countLikeRender(item._id)}</div>
             <ModalUserLiked />
             <ListComment idPost={item._id} />
+
             <div className="px-2 flex">
               <Input
                 theme="light"
@@ -312,11 +325,11 @@ const News = () => {
       </InfiniteScroll>
       {currentPage == totalPages && currentPage !== undefined && (
         <div className=" pb-5">
-          <b>Bạn đã xem toàn bộ bài Post!</b>
+          <b>Bạn đã xem toàn bộ Album!</b>
         </div>
       )}
     </div>
   );
 };
 
-export default News;
+export default AlbumCard;

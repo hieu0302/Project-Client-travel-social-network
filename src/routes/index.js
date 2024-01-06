@@ -2,9 +2,9 @@ import NewsFeed from "../pages/NewsFeed/newsfeed";
 import Notify from "../pages/Notify/notify";
 import profilePage from "../pages/Profile/profilePage";
 import User from "../pages/User/user";
-import LoginPage from "../pages/authentication/LoginPage/LoginPage";
-import SignupPage from "../pages/authentication/SignupPage/SignupPage";
 import Authen from "../pages/authentication/authen";
+import Bookmark from "../pages/Bookmark/Boomark";
+import Album from "../pages/Album/album";
 
 const publicRoutes = [
   { path: "/login", component: Authen },
@@ -13,10 +13,12 @@ const publicRoutes = [
 
 const privateRoutes = [
   { path: "/", component: NewsFeed },
-  // { path: "/posts", component: NewsFeed },
+
   { path: "/user", component: User },
   { path: "/notify", component: Notify },
   { path: "/profile", component: profilePage },
+  { path: "/bookmark", component: Bookmark },
+  { path: "/album", component: Album },
 ];
 
 const privateRoutesMapping = privateRoutes.map((route) => ({

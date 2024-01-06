@@ -8,12 +8,14 @@ import {
   RiEarthLine,
   RiFileUserLine,
   RiLogoutBoxLine,
+  RiCamera3Line,
 } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import { message } from "antd";
 
 const menuItems = [
-  { icon: RiHomeWifiLine, text: "Trang Chủ", to: "/" },
+  { icon: RiHomeWifiLine, text: "Những chuyến đi", to: "/" },
+  { icon: RiCamera3Line, text: "Bộ sưu tập", to: "/album" },
   { icon: RiNotification3Line, text: "Thông báo", to: "/notify" },
   { icon: RiBookmark3Line, text: "Đã Lưu", to: "/bookmark" },
   { icon: RiInboxArchiveLine, text: "Hộp thư", to: "/inbox" },

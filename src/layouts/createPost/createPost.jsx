@@ -22,6 +22,7 @@ import PostsAPI from "../../services/postsAPI";
 import { boolean } from "yup";
 import UploadImage from "./UploadImage/uploadImage";
 import { postSliceAction } from "../../redux/posts/postSlice";
+import FormItem from "antd/es/form/FormItem";
 
 const { RangePicker } = DatePicker;
 
@@ -35,6 +36,7 @@ const CreatePost = () => {
     location: "",
   };
 
+  const [form] = Form.useForm();
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [value, setValue] = useState(initialValues);
@@ -53,16 +55,10 @@ const CreatePost = () => {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields();
   };
-  // const handleChange = (field, value) => {
-  //   setValue((prevValue) => ({
-  //     ...prevValue,
-  //     [field]: value,
-  //   }));
-  // };
-  // console.log(value);
+
   const onClickCreatePost = async () => {
-    const randomValue = Math.random();
     try {
       const newData = {
         userId: currentUser._id,
@@ -73,7 +69,7 @@ const CreatePost = () => {
       };
       await PostsAPI.createPost(newData);
       message.success("Tạo bài viết mới thành công");
-
+      form.resetFields();
       setIsModalOpen(false);
       dispatch(postSliceAction.createPost(newData));
     } catch (err) {
@@ -113,7 +109,7 @@ const CreatePost = () => {
             </Button>,
           ]}
         >
-          <Form>
+          <Form form={form}>
             <div className="flex gap-5">
               <img
                 src={currentUser.avatar}
@@ -155,7 +151,7 @@ const CreatePost = () => {
               </div>
             </div>
             <div className="my-3">
-              <Form.Item>
+              <Form.Item name="title">
                 <Input
                   // borderColor="#FFFFFF"
                   fontSize={20}
@@ -193,30 +189,34 @@ const CreatePost = () => {
             </ImgCrop>
           </div> */}
             <div className=" mx-8 my-5 ">
-              <p className="text-base font-bold">Thời gian chuyến đi: </p>
-              <Space className="m-2" direction="vertical" size={20}>
-                <RangePicker
-                  onChange={(e) =>
-                    setValue({
-                      ...value,
-                      startDay: dayjs(e[0]["$d"]).format("DD/MM/YYYY"),
-                      endDay: dayjs(e[1]["$d"]).format("DD/MM/YYYY"),
-                    })
-                  }
-                  bordered={false}
-                  format={dateFormat}
-                />
-              </Space>
+              <FormItem name="day">
+                <p className="text-base font-bold">Thời gian chuyến đi: </p>
+                <Space className="m-2" direction="vertical" size={20}>
+                  <RangePicker
+                    onChange={(e) =>
+                      setValue({
+                        ...value,
+                        startDay: dayjs(e[0]["$d"]).format("DD/MM/YYYY"),
+                        endDay: dayjs(e[1]["$d"]).format("DD/MM/YYYY"),
+                      })
+                    }
+                    bordered={false}
+                    format={dateFormat}
+                  />
+                </Space>
+              </FormItem>
             </div>
             <div className=" mx-8 my-5 ">
-              <p className="text-base font-bold">Điểm đến: </p>
-              <Input
-                bordered={false}
-                placeholder="Điểm đến chuyến đi của bạn"
-                onChange={(e) =>
-                  setValue({ ...value, location: e.target.value })
-                }
-              />
+              <FormItem name="location">
+                <p className="text-base font-bold">Điểm đến: </p>
+                <Input
+                  bordered={false}
+                  placeholder="Điểm đến chuyến đi của bạn"
+                  onChange={(e) =>
+                    setValue({ ...value, location: e.target.value })
+                  }
+                />
+              </FormItem>
             </div>
           </Form>
         </Modal>

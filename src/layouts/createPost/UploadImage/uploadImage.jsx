@@ -55,6 +55,7 @@ const UploadImage = ({ setUrl }) => {
     setUploading(true);
     const formData = new FormData();
     formData.append("image", info.file);
+    console.log("FORMDATA::::", info.file);
     try {
       const res = await UploadImageAPI.uploadImage(formData);
       if (res.data.url) {

@@ -10,6 +10,9 @@ module.exports = {
         700: "700px",
         600: "600px",
       },
+      translate: {
+        a: "-50%",
+      },
     },
   },
 
