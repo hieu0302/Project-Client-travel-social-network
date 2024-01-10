@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllComment } from "./commentAction";
+import { fetchAllComment, fetchCommentByPage } from "./commentAction";
 
 const initialState = {
   commentData: [],
   fetchPostPending: false,
   isLoading: false,
+  commentDataByPage: [],
+  pagination: [],
 };
 
 const commentSlice = createSlice({
@@ -18,6 +20,9 @@ const commentSlice = createSlice({
       state.commentData = state.commentData.filter(
         (item) => item._id != action.payload
       );
+    },
+    removeCommentData: (state, action) => {
+      state.commentDataByPage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -40,6 +45,31 @@ const commentSlice = createSlice({
       })
       .addCase(fetchAllComment.rejected, (state, action) => {
         (state.isLoading = false), (state.error = action.error.message);
+      })
+
+      .addCase(fetchCommentByPage.pending, (state) => {
+        state.fetchPostPending = true;
+        state.isLoading = true;
+      })
+
+      .addCase(fetchCommentByPage.fulfilled, (state, { payload }) => {
+        state.fetchPostPending = false;
+        // if (
+        //   state.pagination?.currentPage !== payload?.pagination?.currentPage
+        // ) {
+        const newResult = [...state.commentDataByPage];
+        payload.commentDataByPage?.forEach((item) => {
+          if (!state.commentDataByPage.find((x) => x._id == item._id)) {
+            newResult.push(item);
+            state.pagination = payload.pagination;
+          }
+        });
+        state.commentDataByPage = newResult;
+        // }
+      })
+      .addCase(fetchCommentByPage.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
       });
   },
 });

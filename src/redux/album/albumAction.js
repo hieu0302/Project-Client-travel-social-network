@@ -17,8 +17,6 @@ export const fetchAllAlbum = createAsyncThunk(
         pagination: response.data.pagination,
       };
 
-      console.log("Response_ALBUM", response);
-
       return fulfillWithValue(payload);
     } catch (error) {
       console.log(error);

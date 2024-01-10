@@ -13,6 +13,7 @@ import { FaPersonWalkingLuggage } from "react-icons/fa6";
 import { GrGallery } from "react-icons/gr";
 import { MdOutlinePublic } from "react-icons/md";
 import { RiGitRepositoryPrivateLine } from "react-icons/ri";
+import { TiDeleteOutline } from "react-icons/ti";
 import InputEmoji from "react-input-emoji";
 import ImgCrop from "antd-img-crop";
 import React, { useState } from "react";
@@ -41,10 +42,23 @@ const CreatePost = () => {
   const dispatch = useDispatch();
   const [value, setValue] = useState(initialValues);
   const [cloudinaryUrl, setCloudinaryUrl] = useState([]);
+  const [inputTimeline, setInputTimeline] = useState([1]);
 
-  const dateFormat = "DD/MM/YYYY";
+  const dateFormat = "DD/MM/YYYY HH:mm";
 
   const customFormat = (value) => value.format(dateFormat);
+
+  const addInputTimeline = () => {
+    setInputTimeline([...inputTimeline, inputTimeline + 1]);
+  };
+  console.log("InputTimeline", inputTimeline);
+
+  const removeInputTimeline = (index) => {
+    console.log(index);
+    const input = [...inputTimeline];
+    input.splice(index, 1);
+    setInputTimeline(input);
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -55,6 +69,7 @@ const CreatePost = () => {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setInputTimeline([""]);
     form.resetFields();
   };
 
@@ -67,11 +82,13 @@ const CreatePost = () => {
         ...value,
         ...cloudinaryUrl,
       };
-      await PostsAPI.createPost(newData);
-      message.success("Tạo bài viết mới thành công");
-      form.resetFields();
-      setIsModalOpen(false);
-      dispatch(postSliceAction.createPost(newData));
+      const result = await PostsAPI.createPost(newData);
+      if (result.status == 201) {
+        message.success("Tạo bài viết mới thành công");
+        form.resetFields();
+        setIsModalOpen(false);
+        dispatch(postSliceAction.createPost(result.data.newPostData));
+      }
     } catch (err) {
       console.log(err);
     }
@@ -171,23 +188,7 @@ const CreatePost = () => {
                 }
               />
             </Form.Item>
-            {/* <div className="flex justify-center">
-            <ImgCrop rotationSlider>
-              <Upload
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                listType="picture"
-                fileList={fileList}
-                onChange={onChange}
-                onPreview={onPreview}
-              >
-                {fileList.length < 1 && (
-                  <Button size="large" icon={<UploadOutlined />}>
-                    Thêm ảnh bìa
-                  </Button>
-                )}
-              </Upload>
-            </ImgCrop>
-          </div> */}
+
             <div className=" mx-8 my-5 ">
               <FormItem name="day">
                 <p className="text-base font-bold">Thời gian chuyến đi: </p>
@@ -217,6 +218,41 @@ const CreatePost = () => {
                   }
                 />
               </FormItem>
+              {/* <p className=" text-base font-bold">Timeline:</p> */}
+              {inputTimeline.map((item, index) => {
+                return (
+                  <FormItem name="timeline" key={index}>
+                    <b>Timeline {index + 1} </b>
+                    <div className="flex gap-2 justify-around">
+                      <DatePicker
+                        showTime
+                        format={dateFormat}
+                        className="w-2/5"
+                      />
+                      <Input
+                        placeholder="Điểm đến chuyến đi của bạn"
+                        className="w-1/2"
+                        onChange={(e) =>
+                          setValue({ ...value, location: e.target.value })
+                        }
+                      />
+                      {inputTimeline.length !== 1 && (
+                        <button
+                          onClick={() => removeInputTimeline(index)}
+                          className=" hover:text-red-700"
+                        >
+                          <TiDeleteOutline size={25} />
+                        </button>
+                      )}
+                    </div>
+                  </FormItem>
+                );
+              })}
+              <div className=" text-center w-full">
+                <Button onClick={addInputTimeline}>
+                  + Thêm timeline cho chuyến đi
+                </Button>
+              </div>
             </div>
           </Form>
         </Modal>

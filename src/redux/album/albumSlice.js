@@ -9,12 +9,34 @@ const initialState = {
   fetchAlbumError: null,
   pagination: {},
   albumId: [],
+  openModal: false,
+  idAlbumOpendetail: [],
 };
 
 const albumSlice = createSlice({
   name: "album",
   initialState,
-  reducers: {},
+  reducers: {
+    deleteAlbum: (state, action) => {
+      state.albumData = state.albumData.filter(
+        (item) => item._id != action.payload
+      );
+    },
+    createalbum: (state, action) => {
+      state.albumData.unshift(action.payload);
+    },
+    openModal: (state, action) => {
+      state.openModal = action.payload;
+      console.log("OPEN::::???", state.openModal);
+    },
+    idAlbumOpenDetail: (state, action) => {
+      state.idAlbumOpendetail = action.payload;
+    },
+    removeIdAlbum: (state, action) => {
+      state.idAlbumOpendetail = action.payload;
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllAlbum.pending, (state) => {

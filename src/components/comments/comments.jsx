@@ -19,6 +19,8 @@ const ListComment = (props) => {
     (comments) => comments.idPost === props.idPost
   );
 
+  const dataCommentFilter = quantityComment.slice(-3);
+
   const handleDelete = async (id) => {
     try {
       await CommentAPI.deleteComment(id);
@@ -40,7 +42,7 @@ const ListComment = (props) => {
   return (
     <div>
       <p className="px-4 font-bold">{quantityComment.length} bình luận</p>
-      {quantityComment.map((comment, commentIndex) => (
+      {dataCommentFilter.map((comment, commentIndex) => (
         <div className="flex  items-center">
           <div key={commentIndex} className="flex gap-3 items-center px-5">
             <img src={comment.avatar} className="w-10 h-10 rounded-full" />

@@ -10,8 +10,6 @@ export const fetchAllLike = createAsyncThunk(
   async (payload, { rejectWithValue, fulfillWithValue }) => {
     const params = payload;
 
-    console.log("6098790645", payload);
-
     try {
       const response = await LikeAPI.getLikeByPost(params);
       const payload = {

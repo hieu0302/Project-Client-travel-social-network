@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import CommentAPI from "../../services/commentAPI";
 
 const FETCH_ALL_COMMENT = "app/fetch-all-comment";
+const FETCH_COMMENT_BY_PAGE = "app/fetch-comment-by-page";
 
 export const fetchAllComment = createAsyncThunk(
   FETCH_ALL_COMMENT,
@@ -20,3 +21,25 @@ export const fetchAllComment = createAsyncThunk(
     }
   }
 );
+
+export const fetchCommentByPage = createAsyncThunk(
+  FETCH_COMMENT_BY_PAGE,
+  async (payload, { rejectWithValue, fulfillWithValue }) => {
+    const params = payload;
+
+    try {
+      const response = await CommentAPI.getCommentByPage(params);
+      const payload = {
+        commentDataByPage: response?.data.data,
+        pagination: response?.data.pagination,
+      };
+      console.log("Response_ALBUM", response);
+      return fulfillWithValue(payload);
+    } catch (error) {
+      console.log(error);
+      rejectWithValue(error);
+    }
+  }
+);
+
+

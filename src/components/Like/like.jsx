@@ -2,9 +2,10 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 import LikeAPI from "../../services/likesAPI";
 import { message } from "antd";
 import { fetchAllLike, fetchAllPostLiked } from "../../redux/likes/likeAction";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { likeSliceAction } from "../../redux/likes/LikeSlice";
+import { Socket, io } from "socket.io-client";
 
 const Like = (data) => {
   const dispatch = useDispatch();
@@ -13,10 +14,23 @@ const Like = (data) => {
   const { postLiked } = useSelector((state) => state.like);
 
   const { currentPage, postId, idPost } = data.data || [];
-  console.log("CurrentPage:", currentPage);
-  console.log("ID LIKE: ", idPost);
+  const [socket, setSocket] = useState(null);
 
-  console.log("LIKED::", postLiked);
+  useEffect(() => {
+    const newSocket = io("http://localhost:4000");
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [data.data.idUser]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    socket.emit("addNewUser", data.data.idUser);
+  }, [socket]);
+
+  console.log(data.data.usernameCreate);
 
   const createLike = async () => {
     const newLike = {
@@ -31,6 +45,12 @@ const Like = (data) => {
 
       if (response.status == 201) {
         message.success("Đã thích bài viết!");
+        socket.emit("sendLike", {
+          senderName: data.data.username,
+          receiverName: data.data.usernameCreate,
+          idReceiver: data.data.idUserCreate,
+          idSender: data.data.idUser,
+        });
         dispatch(likeSliceAction.createdLike(response.data.newLikeData.idPost));
       }
     } catch (error) {

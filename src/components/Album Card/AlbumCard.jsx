@@ -12,6 +12,7 @@ import {
   GoShareAndroid,
   GoBookmark,
 } from "react-icons/go";
+import Dotdotdot from "react-dotdotdot";
 
 import "moment/dist/locale/vi";
 import CreateAlbum from "../../layouts/CreateAlbum/CreateAlbum";
@@ -30,6 +31,8 @@ import Like from "../Like/like";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
 import { likeSliceAction } from "../../redux/likes/LikeSlice";
 import ListComment from "../comments/comments.jsx";
+import { albumSliceAction } from "../../redux/album/albumslice.js";
+import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
 
 moment.locale("vi");
 
@@ -37,7 +40,7 @@ const { confirm } = Modal;
 
 const AlbumCard = () => {
   const dispatch = useDispatch();
-  const { albumData, pagination, albumId } = useSelector(
+  const { albumData, pagination, albumId, openModal } = useSelector(
     (state) => state.album
   );
   const { countLike } = useSelector((state) => state.like);
@@ -110,7 +113,7 @@ const AlbumCard = () => {
       async onOk() {
         try {
           const result = await handleDelete(id);
-          // dispatch(postSliceAction.deletePost(id));
+          dispatch(albumSliceAction.deleteAlbum(id));
         } catch (error) {
           console.log(error);
         }
@@ -175,7 +178,12 @@ const AlbumCard = () => {
       }
     }
   };
-  console.log("hahahaeueurheu::::", ListComment);
+
+  const openModalDetail = (id) => {
+    dispatch(albumSliceAction.openModal(!openModal));
+    dispatch(albumSliceAction.idAlbumOpenDetail(id));
+  };
+
   return (
     <div className="flex flex-col items-center gap-5 w-2/3">
       <div>
@@ -236,7 +244,10 @@ const AlbumCard = () => {
               <button className="text-xl font-bold">{item.title}</button>
             </div>
             <div className="mt-5  rounded-xl grid grid-cols-2 grid-rows-2 gap-2 ">
-              <button className=" col-span-1 row-span-2">
+              <button
+                onClick={() => openModalDetail(item._id)}
+                className=" col-span-1 row-span-2"
+              >
                 <img
                   className=" h-full w-full object-cover rounded-xl border  "
                   src={item.image[0]}
@@ -269,11 +280,14 @@ const AlbumCard = () => {
               </p>
             </div>
             <div className="flex  pt-3 pl-5">
-              <p>
-                <b className="w-full">{item.username}: </b>
-                {item.description}
-              </p>
+              <Dotdotdot clamp={3} truncationChar=" ...Đọc thêm...">
+                <p>
+                  <b className="w-full">{item.username}: </b>
+                  {item.description}
+                </p>
+              </Dotdotdot>
             </div>
+            <ModalDetailAlbum />
             <div className="flex justify-between p-3">
               <div className="flex gap-5 ">
                 <Like
@@ -284,6 +298,8 @@ const AlbumCard = () => {
                     albumId: albumId,
                     idUser: currentUser._id,
                     avatar: currentUser.avatar,
+                    idUserCreate: item.userId,
+                    usernameCreate: item.username,
                   }}
                 />
                 <button>
@@ -298,7 +314,7 @@ const AlbumCard = () => {
               </button>
             </div>
             <div className=" px-4">{countLikeRender(item._id)}</div>
-            <ModalUserLiked />
+            <ModalUserLiked idAlbum={item._id} />
             <ListComment idPost={item._id} />
 
             <div className="px-2 flex">

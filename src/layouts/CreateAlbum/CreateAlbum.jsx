@@ -23,6 +23,7 @@ import { boolean } from "yup";
 import UploadImage from "./UploadImage/uploadImage";
 import UploadImageAPI from "../../services/uploadAPI";
 import FormItem from "antd/es/form/FormItem";
+import { albumSliceAction } from "../../redux/album/albumslice";
 
 const { RangePicker } = DatePicker;
 
@@ -101,12 +102,11 @@ const CreateAlbum = () => {
       console.log("Dem so luong anh:", successfulUploads);
 
       if (successfulUploads === dataImage.dataImage.length) {
-        console.log("sdsafdsdf::::::", newData);
-
         const response = await AlbumAPI.createAlbum(newData);
 
         if (response.status == 201) {
           message.success("Tạo bài viết mới thành công");
+          dispatch(albumSliceAction.createalbum(response.data.newAlbumData));
 
           form.resetFields();
 
@@ -202,10 +202,11 @@ const CreateAlbum = () => {
             </div>
           </div>
           <Form.Item name="title">
-            <div className="my-3">
+            <div className="my-1 mx-8">
               <p className="text-base font-bold">Tiêu đề Album: </p>
               <Input
                 // borderColor="#FFFFFF"
+                bordered={false}
                 fontSize={20}
                 placeholder="Tiêu đề chuyến đi của bạn"
                 size="large"
@@ -228,25 +229,9 @@ const CreateAlbum = () => {
               }
             />
           </Form.Item>
-          {/* <div className="flex justify-center">
-            <ImgCrop rotationSlider>
-              <Upload
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                listType="picture"
-                fileList={fileList}
-                onChange={onChange}
-                onPreview={onPreview}
-              >
-                {fileList.length < 1 && (
-                  <Button size="large" icon={<UploadOutlined />}>
-                    Thêm ảnh bìa
-                  </Button>
-                )}
-              </Upload>
-            </ImgCrop>
-          </div> */}
+
           <Form.Item name="day">
-            <div className=" mx-8 my-5 ">
+            <div className=" mx-8 ">
               <p className="text-base font-bold">Thời gian chuyến đi: </p>
               <Space className="m-2" direction="vertical" size={20}>
                 <RangePicker
@@ -264,7 +249,7 @@ const CreateAlbum = () => {
             </div>
           </Form.Item>
           <Form.Item name="location">
-            <div className=" mx-8 my-5 ">
+            <div className=" mx-8 ">
               <p className="text-base font-bold">Điểm đến: </p>
               <Input
                 bordered={false}
@@ -276,7 +261,7 @@ const CreateAlbum = () => {
             </div>
           </Form.Item>
           <Form.Item name="description">
-            <div className=" mx-8 my-5 ">
+            <div className=" mx-8 ">
               <p className="text-base font-bold">Chi tiết về Album: </p>
               <Input
                 bordered={false}

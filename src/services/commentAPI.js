@@ -16,6 +16,11 @@ const CommentAPI = {
     const params = { id: id };
     return api.get(url, { params });
   },
+  getCommentByPage: (params) => {
+    const { idPost, limit = 5, page = 1, sort = "desc" } = params;
+    const url = `/comment/byPage?idPost=${idPost}&limit=${limit}&page=${page}&sort=${sort}`;
+    return api.get(url);
+  },
 
   deleteComment: (id) => {
     const url = `/comment/${id}`;
