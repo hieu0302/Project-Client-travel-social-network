@@ -38,6 +38,7 @@ import {
 import { likeSliceAction } from "../../redux/likes/LikeSlice.js";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
 import AnimatedNumber from "react-animated-numbers";
+import socket from "../Socket/Soket.js";
 
 moment.locale("vi");
 
@@ -89,15 +90,15 @@ const News = () => {
 
   const [valueComment, setValueComment] = useState(initialValues);
 
-  const createComment = async (id) => {
+  const createComment = async (item) => {
     const comment = {
       ...valueComment,
-      idPost: id,
+      idPost: item._id,
       userComment: currentUser.username,
       avatar: currentUser.avatar,
       userId: currentUser._id,
     };
-
+    console.log("ITEMDATA12345:::", item);
     try {
       const response = await CommentAPI.createComent(comment);
 
@@ -105,6 +106,17 @@ const News = () => {
         message.success("Bình luận thành công!");
         dispatch(commentSliceAction.createComment(response.data.comment));
         setValueComment("");
+        if (currentUser.userId !== item.userId) {
+          socket.emit("sendComment", {
+            senderName: currentUser.username,
+            idSender: currentUser._id,
+            receivername: item.username,
+            titlePost: item.title,
+            idReceiver: item.userId,
+            idPost: item._id,
+            ...valueComment,
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -188,11 +200,11 @@ const News = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 w-2/3 mb-6">
+    <div className="ml-10 flex flex-col items-center gap-5 w-2/3 mb-6">
       <div>
         <CreatePost />
       </div>
-      <span className="w-600  ">
+      <span className="w-600 mx-10  ">
         {loading && !currentPage && (
           <Skeleton active avatar paragraph={{ rows: 3 }} />
         )}
@@ -206,7 +218,7 @@ const News = () => {
         {postsData.map((item, index) => (
           <div
             key={index}
-            className=" bg-white w-700 border-solid border-2 mb-3 p-5 rounded-2xl"
+            className=" bg-white w-650 border-solid mb-10 mx-10 p-5 rounded-2xl shadow-xl"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-5">
@@ -245,19 +257,21 @@ const News = () => {
             </div>
             <div className="mt-5 relative">
               <img
-                className=" w-full h-96 object-cover rounded-xl border "
+                className=" w-full h-80 object-cover rounded-xl border "
                 src={item.image[0]}
               />
               <div className=" text-white  font-bold absolute bottom-10 left-5 drop-shadow-2xl">
-                <button className="text-4xl">{item.title}</button>
-                <p className="text-xl flex gap-2">
+                <button className="text-4xl ">
+                  <p className=" text-shadow-lg shadow-black">{item.title}</p>
+                </button>
+                <p className="text-xl flex gap-2 text-shadow-lg shadow-black">
                   <IoLocationOutline />
                   Địa điểm: {item.location}
                 </p>
-                <p className="flex gap-3">
+                <p className="flex gap-3 text-shadow-lg shadow-black">
                   <MdFlightTakeoff size={20} /> Bắt đầu: {item.startDay}
                 </p>
-                <p className="flex gap-3">
+                <p className="flex gap-3 text-shadow-lg shadow-black">
                   <MdFlightLand size={20} /> Kết thúc: {item.endDay}
                 </p>
               </div>
@@ -269,9 +283,11 @@ const News = () => {
                     idPost: item._id,
                     username: currentUser.username,
                     currentPage: pagination.currentPage,
-                    postId: postId,
                     idUser: currentUser._id,
                     avatar: currentUser.avatar,
+                    idUserCreate: item.userId,
+                    usernameCreate: item.username,
+                    titlePost: item.title,
                   }}
                 />
                 <button>
@@ -301,7 +317,7 @@ const News = () => {
               />
 
               <button
-                onClick={() => createComment(item._id)}
+                onClick={() => createComment(item)}
                 className=" p-2 rounded-2xl text-blue-700 hover:bg-slate-100"
               >
                 Đăng

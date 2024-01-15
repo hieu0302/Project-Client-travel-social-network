@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchCurrentUser } from "./userActions";
 
+
 const initialState = {
   isAuthenticated: false,
   error: null,
   fetchCurrentUserPending: false,
   fetchCurrentUserError: null,
   currentUser: {},
+  socket: null,
 };
 
 const authSlice = createSlice({
@@ -16,6 +18,9 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem("accessToken");
       state.isAuthenticated = false;
+    },
+    addNewSocket: (state, { payload }) => {
+      state.socket = payload.action;
     },
   },
   extraReducers: (builder) => {
@@ -38,7 +43,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const authSliceAction = authSlice.actions;
 
 export default authSlice.reducer;
 

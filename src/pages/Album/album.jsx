@@ -1,11 +1,11 @@
 import AlbumCard from "../../components/Album Card/AlbumCard";
-import SearchBox from "../../components/search/search";
+import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
 
 const Album = () => {
   return (
     <div className="flex w-full">
       <AlbumCard />
-      <SearchBox />
+      <UserProfileCard />
     </div>
   );
 };

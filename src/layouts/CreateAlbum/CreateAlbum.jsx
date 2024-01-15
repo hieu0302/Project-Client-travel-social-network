@@ -124,12 +124,12 @@ const CreateAlbum = () => {
 
   return (
     <div className="flex gap-5 my-10">
-      <button className="border p-10 rounded-2xl hover:bg-slate-100 flex gap-5 items-center font-bold ">
+      <button className="border p-10 rounded-2xl bg-white hover:bg-slate-200 flex gap-5 items-center font-bold ">
         <FaPersonWalkingLuggage size={35} /> Thêm một chuyến đi mới
       </button>
       <button
         onClick={showModal}
-        className="border p-10  rounded-2xl hover:bg-slate-100 flex gap-5 items-center font-bold"
+        className="border p-10  rounded-2xl bg-white hover:bg-slate-200 flex gap-5 items-center font-bold"
       >
         <GrGallery size={35} /> Thêm một Album mới
       </button>

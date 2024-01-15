@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { EllipsisOutlined } from "@ant-design/icons";
 import React, { useEffect } from "react";
 import { Button, message, Popconfirm } from "antd";
+import moment from "moment";
+
+moment.locale("vi");
 
 const ListComment = (props) => {
   const { commentData } = useSelector((state) => state.comment);
@@ -46,8 +49,13 @@ const ListComment = (props) => {
         <div className="flex  items-center">
           <div key={commentIndex} className="flex gap-3 items-center px-5">
             <img src={comment.avatar} className="w-10 h-10 rounded-full" />
-            <div className=" bg-gray-100 p-3 m-2 rounded-xl">
-              <b>{comment.userComment}</b>
+            <div className=" bg-gray-100 p-2 m-1 rounded-xl text-sm">
+              <div className="flex gap-4 items-center">
+                <b>{comment.userComment} .</b>
+                <p className=" text-xs font-thin">
+                  {moment(new Date(comment.createdAt)).fromNow()}
+                </p>
+              </div>
               <p>{comment.comment}</p>
             </div>
           </div>

@@ -37,21 +37,29 @@ const CreatePost = () => {
     location: "",
   };
 
+  const templateValue = {
+    time: "",
+    location: "",
+    id: "",
+  };
+
   const [form] = Form.useForm();
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [value, setValue] = useState(initialValues);
   const [cloudinaryUrl, setCloudinaryUrl] = useState([]);
-  const [inputTimeline, setInputTimeline] = useState([1]);
+  const [inputTimeline, setInputTimeline] = useState([]);
 
   const dateFormat = "DD/MM/YYYY HH:mm";
 
   const customFormat = (value) => value.format(dateFormat);
 
   const addInputTimeline = () => {
-    setInputTimeline([...inputTimeline, inputTimeline + 1]);
+    setInputTimeline([...inputTimeline, templateValue]);
   };
-  console.log("InputTimeline", inputTimeline);
+
+  const newValueInput = [...inputTimeline];
+  console.log("InputTimeline", newValueInput[0]);
 
   const removeInputTimeline = (index) => {
     console.log(index);
@@ -99,11 +107,11 @@ const CreatePost = () => {
       <div className="flex gap-5 my-10">
         <button
           onClick={showModal}
-          className="border p-10 rounded-2xl hover:bg-slate-100 flex gap-5 items-center font-bold"
+          className="border p-10 rounded-2xl bg-white hover:bg-slate-200 flex gap-5 items-center font-bold"
         >
           <FaPersonWalkingLuggage size={35} /> Thêm một chuyến đi mới
         </button>
-        <button className="border p-10  rounded-2xl hover:bg-slate-100 flex gap-5 items-center font-bold">
+        <button className="border p-10  rounded-2xl bg-white hover:bg-slate-200 flex gap-5 items-center font-bold">
           <GrGallery size={35} /> Thêm một Album mới
         </button>
 
@@ -222,19 +230,32 @@ const CreatePost = () => {
               {inputTimeline.map((item, index) => {
                 return (
                   <FormItem name="timeline" key={index}>
-                    <b>Timeline {index + 1} </b>
+                    <b> Mốc thời gian {index + 1} </b>
                     <div className="flex gap-2 justify-around">
                       <DatePicker
                         showTime
                         format={dateFormat}
                         className="w-2/5"
+                        onChange={(e) => {
+                          setInputTimeline({
+                            ...inputTimeline,
+                            time: e.target.value,
+                          });
+                        }}
                       />
                       <Input
                         placeholder="Điểm đến chuyến đi của bạn"
                         className="w-1/2"
-                        onChange={(e) =>
-                          setValue({ ...value, location: e.target.value })
-                        }
+                        onChange={(e) => {
+                          newValueInput[index] = {
+                            ...newValueInput,
+                            location: e.target.value,
+                          };
+                          setInputTimeline(
+                            ...setInputTimeline,
+                            newValueInput[index]
+                          );
+                        }}
                       />
                       {inputTimeline.length !== 1 && (
                         <button

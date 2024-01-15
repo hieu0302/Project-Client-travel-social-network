@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import PrivateRoute from "./routes/privateRoute";
 import "./App.css";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -9,6 +9,8 @@ import { TOKEN_TYPES } from "./utils/constants";
 import { fetchCurrentUser } from "./redux/user/userActions";
 import Logo from "./assets/Trip-removebg-preview.png";
 import { Alert, Flex, Spin } from "antd";
+import socket from "./components/Socket/Soket.js";
+import Login from "./pages/authentication/LoginPage/LoginPage.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -17,6 +19,7 @@ const App = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     const accessToken = localStorage.getItem(TOKEN_TYPES.ACCESS_TOKEN);
     // const userLocal = localStorage.getItem("userInfo");
@@ -27,6 +30,16 @@ const App = () => {
       });
     }
   }, []);
+  console.log("DOubleSoket", socket);
+
+  useEffect(() => {
+    const userInfo = localStorage.getItem("userInfo");
+    const IdUser = JSON.parse(userInfo);
+
+    if (IdUser) {
+      socket?.emit("addNewUser", IdUser?.idUser);
+    }
+  }, [socket]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -36,7 +49,7 @@ const App = () => {
   // const currentPath = location.pathname;
   // const excludePath = ["/login", "/signup"];
   return (
-    <div className="flex">
+    <div className="flex bg-slate-100">
       {isAuthenticated && (
         <div>
           <NavBar />

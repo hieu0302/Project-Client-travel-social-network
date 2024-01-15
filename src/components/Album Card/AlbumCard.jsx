@@ -33,6 +33,7 @@ import { likeSliceAction } from "../../redux/likes/LikeSlice";
 import ListComment from "../comments/comments.jsx";
 import { albumSliceAction } from "../../redux/album/albumslice.js";
 import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
+import socket from "../Socket/Soket.js";
 
 moment.locale("vi");
 
@@ -80,10 +81,10 @@ const AlbumCard = () => {
 
   const [valueComment, setValueComment] = useState(initialValues);
 
-  const createComment = async (id) => {
+  const createComment = async (item) => {
     const comment = {
       ...valueComment,
-      idPost: id,
+      idPost: item._id,
       userComment: currentUser.username,
       avatar: currentUser.avatar,
       userId: currentUser._id,
@@ -96,6 +97,17 @@ const AlbumCard = () => {
         message.success("Bình luận thành công!");
         dispatch(commentSliceAction.createComment(response.data.comment));
         setValueComment("");
+        if (currentUser.userId !== item.userId) {
+          socket.emit("sendComment", {
+            senderName: currentUser.username,
+            idSender: currentUser._id,
+            receivername: item.username,
+            titlePost: item.title,
+            idReceiver: item.userId,
+            idPost: item._id,
+            ...valueComment,
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -185,11 +197,11 @@ const AlbumCard = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 w-2/3">
+    <div className=" ml-10 flex flex-col items-center gap-5 w-2/3">
       <div>
         <CreateAlbum />
       </div>
-      <span className="w-600  ">
+      <span className=" w-650 mx-10 ">
         {loading && !currentPage && (
           <Skeleton active avatar paragraph={{ rows: 3 }} />
         )}
@@ -203,7 +215,7 @@ const AlbumCard = () => {
         {albumData.map((item, index) => (
           <div
             key={index}
-            className=" bg-white w-700 border-solid border-2 mb-3 p-5 rounded-2xl"
+            className=" bg-white w-650 border-solid  mb-10 mx-10 p-5 rounded-lg shadow-xl"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-5">
@@ -240,7 +252,7 @@ const AlbumCard = () => {
                 ) : null}
               </div>
             </div>
-            <div className="pt-3">
+            <div className="pt-3 pl-3">
               <button className="text-xl font-bold">{item.title}</button>
             </div>
             <div className="mt-5  rounded-xl grid grid-cols-2 grid-rows-2 gap-2 ">
@@ -300,6 +312,7 @@ const AlbumCard = () => {
                     avatar: currentUser.avatar,
                     idUserCreate: item.userId,
                     usernameCreate: item.username,
+                    titlePost: item.title,
                   }}
                 />
                 <button>
@@ -330,7 +343,7 @@ const AlbumCard = () => {
               />
 
               <button
-                onClick={() => createComment(item._id)}
+                onClick={() => createComment(item)}
                 className=" p-2 rounded-2xl text-blue-700 hover:bg-slate-100"
               >
                 Đăng

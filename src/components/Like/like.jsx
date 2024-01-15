@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { likeSliceAction } from "../../redux/likes/LikeSlice";
 import { Socket, io } from "socket.io-client";
+import { authSliceAction } from "../../redux/user/userSlice";
+import socket from "../Socket/Soket.js";
 
 const Like = (data) => {
   const dispatch = useDispatch();
@@ -13,24 +15,20 @@ const Like = (data) => {
   //   const { postId } = useSelector((state) => state.posts);
   const { postLiked } = useSelector((state) => state.like);
 
+  // const [socket, setSocket] = useState(null);
+
   const { currentPage, postId, idPost } = data.data || [];
-  const [socket, setSocket] = useState(null);
+  // const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:4000");
-    setSocket(newSocket);
+  // useEffect(() => {
+  //   socket
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [data.data.idUser]);
+  //   // setSocket(newSocket);
 
-  useEffect(() => {
-    if (socket === null) return;
-    socket.emit("addNewUser", data.data.idUser);
-  }, [socket]);
-
-  console.log(data.data.usernameCreate);
+  //   return () => {
+  //     newSocket.disconnect();
+  //   };
+  // }, [data.data.idUser]);
 
   const createLike = async () => {
     const newLike = {
@@ -45,13 +43,18 @@ const Like = (data) => {
 
       if (response.status == 201) {
         message.success("Đã thích bài viết!");
-        socket.emit("sendLike", {
-          senderName: data.data.username,
-          receiverName: data.data.usernameCreate,
-          idReceiver: data.data.idUserCreate,
-          idSender: data.data.idUser,
-        });
         dispatch(likeSliceAction.createdLike(response.data.newLikeData.idPost));
+
+        if (data.data.idUserCreate !== data.data.idUser) {
+          socket.emit("sendLike", {
+            senderName: data.data.username,
+            receiverName: data.data.usernameCreate,
+            idReceiver: data.data.idUserCreate,
+            idSender: data.data.idUser,
+            titlePost: data.data.titlePost,
+            idPost: data.data.idPost,
+          });
+        }
       }
     } catch (error) {
       console.log(error);
