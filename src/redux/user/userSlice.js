@@ -17,6 +17,17 @@ const authSlice = createSlice({
       localStorage.removeItem("accessToken");
       state.isAuthenticated = false;
     },
+    savePost: (state, action) => {
+      if (!state.currentUser?.savePost) {
+        state.currentUser.savePost = [action.payload]
+      } else {
+        const checkPostExist = state.currentUser.savePost?.find(item => item == action.payload)
+        if(!checkPostExist)
+          state.currentUser.savePost = [...state.currentUser?.savePost, action.payload]
+        else
+          state.currentUser.savePost = state.currentUser?.savePost.filter(item => item != action.payload)
+      }
+    }
   },
   extraReducers: (builder) => {
     // Handle async action
@@ -38,7 +49,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, savePost } = authSlice.actions;
 
 export default authSlice.reducer;
 

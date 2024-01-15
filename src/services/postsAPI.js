@@ -11,8 +11,8 @@ const PostsAPI = {
     const url = `/posts/getPostByUserId`;
     return api.get(url);
   },
-  getPostSave: (id) => {
-    const url = `/posts/saved-posts/${id}`;
+  getPostSave: () => {
+    const url = `/posts/saved-posts`;
     return api.get(url);
   },
   putSavePost:(id) => {

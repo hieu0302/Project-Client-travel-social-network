@@ -40,7 +40,8 @@ export const fetchPostSaved = createAsyncThunk(
   async (payload, { rejectWithValue, fulfillWithValue }) => {
     try {
       const response = await PostsAPI.getPostSave(payload);
-      const PostsData = response.data.data;
+      const PostsData = response.data;
+      console.log(PostsData)
       return fulfillWithValue(PostsData);
     } catch (error) {
       console.log(error);

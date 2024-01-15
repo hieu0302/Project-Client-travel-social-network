@@ -13,6 +13,7 @@ const AuthenAPI = {
     const url = "/auth/current-user";
     return api.get(url);
   },
+  
 };
 
 export default AuthenAPI;

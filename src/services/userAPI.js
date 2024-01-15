@@ -5,10 +5,11 @@ const UserAPI = {
     const url = `/users/${id}`;
     return api.get(url);
   },
-  update: (id, data) => {
-    const url = `/users/${id}`;
+  update: ( data) => {
+    const url = `/user`;
     return api.put(url, data);
   },
+  
   getLikes: (id) => {
     const url = `/users/${id}/likes`;
     return api.get(url);

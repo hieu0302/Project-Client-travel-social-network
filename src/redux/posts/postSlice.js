@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllPosts, fetchPostByUser } from "./postActions";
+import { fetchAllPosts, fetchPostByUser, fetchPostSaved } from "./postActions";
 
 const initialState = {
   postsData: [],
@@ -27,7 +27,11 @@ const postsSlice = createSlice({
       .addCase(fetchPostByUser.fulfilled, (state, action) => {
         state.isLoading = true
         state.postsData = action.payload
-      });
+      })
+      .addCase(fetchPostSaved.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.postsData = action.payload  
+      })
   },
 });
 

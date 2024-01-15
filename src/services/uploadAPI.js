@@ -16,5 +16,8 @@ const UploadImageAPI = {
       },
     });
   },
+ 
+  
 };
+
 export default UploadImageAPI;

@@ -12,11 +12,12 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-const UploadAvatar = ({ setUrl }) => {
+const UploadAvatar = ({ setUrl, currentImage }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [defaultFileList, setDefaultFileList] = useState([])
   const [uploading, setUploading] = useState(false);
   //   const { activePage, isEditingPage } = useSelector((state) => state.page);
   //   const { currentUser } = useSelector((state) => state.user);
@@ -48,7 +49,7 @@ const UploadAvatar = ({ setUrl }) => {
     );
   };
 
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = ({ fileList: newFileList }) => { setFileList(newFileList) };
 
   const handleUploadImage = async (info) => {
     if (info.file.status === "removed") return;
@@ -59,7 +60,6 @@ const UploadAvatar = ({ setUrl }) => {
       const res = await UploadImageAPI.uploadAvatar(formData);
       console.log(res.data.url);
       if (res.data.url) {
-        setUrl(res.data.url);
         handleChange(info);
         setUrl([res.data.url]);
       }
@@ -96,6 +96,17 @@ const UploadAvatar = ({ setUrl }) => {
     [uploading]
   );
 
+  useEffect(() => {
+    if (currentImage) {
+      setFileList([
+        {
+          uid: '1',
+          name: currentImage,
+          url: currentImage,
+        },
+      ])
+    }
+  }, [currentImage])
   return (
     <>
       <Upload
