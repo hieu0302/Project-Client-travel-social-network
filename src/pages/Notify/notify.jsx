@@ -1,8 +1,12 @@
+import NotifyCard from "../../components/NotifyCard/NotifyCard";
+import UserProfileCard from "../../components/UserProfileCard/UserProfileCard";
+
 const Notify = () => {
   return (
-    <>
-      <p>Notify</p>
-    </>
+    <div className="flex w-full">
+      <NotifyCard />
+      <UserProfileCard />
+    </div>
   );
 };
 

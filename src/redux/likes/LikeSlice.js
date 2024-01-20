@@ -37,7 +37,7 @@ const likeSlice = createSlice({
     },
     opneModal: (state, action) => {
       state.openModal = action.payload;
-      console.log("Idaid@#$#$#:::", state.openModal);
+      // console.log("Idaid@#$#$#:::", state.openModal);
     },
   },
   extraReducers: (builder) => {

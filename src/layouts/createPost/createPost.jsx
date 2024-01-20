@@ -24,6 +24,7 @@ import { boolean } from "yup";
 import UploadImage from "./UploadImage/uploadImage";
 import { postSliceAction } from "../../redux/posts/postSlice";
 import FormItem from "antd/es/form/FormItem";
+import TagUser from "../../components/TagUser/TagUser";
 
 const { RangePicker } = DatePicker;
 
@@ -40,17 +41,19 @@ const CreatePost = () => {
   const templateValue = {
     time: "",
     location: "",
-    id: "",
   };
 
   const [form] = Form.useForm();
   const { currentUser } = useSelector((state) => state.auth);
+  const { tagUser } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   const [value, setValue] = useState(initialValues);
   const [cloudinaryUrl, setCloudinaryUrl] = useState([]);
   const [inputTimeline, setInputTimeline] = useState([]);
 
-  const dateFormat = "DD/MM/YYYY HH:mm";
+  const dateFormat = "DD/MM/YYYY";
+
+  const [datePicker, setDatePicker] = useState([]);
 
   const customFormat = (value) => value.format(dateFormat);
 
@@ -59,7 +62,7 @@ const CreatePost = () => {
   };
 
   const newValueInput = [...inputTimeline];
-  console.log("InputTimeline", newValueInput[0]);
+  console.log("InputTimeline", newValueInput);
 
   const removeInputTimeline = (index) => {
     console.log(index);
@@ -89,10 +92,13 @@ const CreatePost = () => {
         avatar: currentUser.avatar,
         ...value,
         ...cloudinaryUrl,
+        timeline: [...inputTimeline],
+        tagUser: [...tagUser],
       };
       const result = await PostsAPI.createPost(newData);
       if (result.status == 201) {
         message.success("Tạo bài viết mới thành công");
+        setInputTimeline([""]);
         form.resetFields();
         setIsModalOpen(false);
         dispatch(postSliceAction.createPost(result.data.newPostData));
@@ -100,6 +106,14 @@ const CreatePost = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const disabledDate = (current) => {
+    return (
+      current &&
+      (current < dayjs(datePicker.startDay).endOf("day") ||
+        current > dayjs(datePicker.endDay).endOf("day"))
+    );
   };
 
   return (
@@ -202,13 +216,17 @@ const CreatePost = () => {
                 <p className="text-base font-bold">Thời gian chuyến đi: </p>
                 <Space className="m-2" direction="vertical" size={20}>
                   <RangePicker
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setValue({
                         ...value,
                         startDay: dayjs(e[0]["$d"]).format("DD/MM/YYYY"),
                         endDay: dayjs(e[1]["$d"]).format("DD/MM/YYYY"),
-                      })
-                    }
+                      });
+                      setDatePicker({
+                        startDay: dayjs(e[0]["$d"]),
+                        endDay: dayjs(e[1]["$d"]),
+                      });
+                    }}
                     bordered={false}
                     format={dateFormat}
                   />
@@ -226,6 +244,12 @@ const CreatePost = () => {
                   }
                 />
               </FormItem>
+              <FormItem name="tagUser">
+                <b className="text-base"> Những người cùng tham gia: </b>
+                <div className="pt-3">
+                  <TagUser />
+                </div>
+              </FormItem>
               {/* <p className=" text-base font-bold">Timeline:</p> */}
               {inputTimeline.map((item, index) => {
                 return (
@@ -233,28 +257,41 @@ const CreatePost = () => {
                     <b> Mốc thời gian {index + 1} </b>
                     <div className="flex gap-2 justify-around">
                       <DatePicker
+                        disabledDate={disabledDate}
                         showTime
                         format={dateFormat}
+                        value={
+                          !inputTimeline[index].time
+                            ? ""
+                            : dayjs(inputTimeline[index]?.time, dateFormat)
+                        }
                         className="w-2/5"
-                        onChange={(e) => {
-                          setInputTimeline({
-                            ...inputTimeline,
-                            time: e.target.value,
+                        onChange={(date) => {
+                          const value = date.format(dateFormat);
+                          setInputTimeline((prevInputTimeline) => {
+                            const newInputTimeline = [...prevInputTimeline];
+                            newInputTimeline[index] = {
+                              ...newInputTimeline[index],
+                              time: value,
+                            };
+                            return newInputTimeline;
                           });
                         }}
                       />
                       <Input
                         placeholder="Điểm đến chuyến đi của bạn"
                         className="w-1/2"
+                        value={inputTimeline[index]?.location}
                         onChange={(e) => {
-                          newValueInput[index] = {
-                            ...newValueInput,
-                            location: e.target.value,
-                          };
-                          setInputTimeline(
-                            ...setInputTimeline,
-                            newValueInput[index]
-                          );
+                          const value = e.target.value;
+                          setInputTimeline((prevInputTimeline) => {
+                            const newInputTimeline = [...prevInputTimeline];
+                            newInputTimeline[index] = {
+                              ...newInputTimeline[index],
+                              location: value,
+                            };
+                            return newInputTimeline;
+                          });
                         }}
                       />
                       {inputTimeline.length !== 1 && (

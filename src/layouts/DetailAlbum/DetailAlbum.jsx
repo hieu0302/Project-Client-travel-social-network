@@ -41,15 +41,12 @@ const ModalDetailAlbum = () => {
       };
       dispatch(fetchCommentByPage(payload));
     }
-    console.log("OKKKKKKKKKK");
   }, [page, idAlbumOpendetail]);
-
-  console.log("CMTDATA????///", commentDataByPage);
 
   const fetchMoreComment = () => {
     setPage(currentPage + 1);
   };
-  console.log("idAlbum", page);
+  
 
   return (
     <Modal

@@ -9,6 +9,7 @@ const initialState = {
   fetchPostError: null,
   postId: [],
   pagination: {},
+  tagUser: [],
 };
 
 const postsSlice = createSlice({
@@ -23,6 +24,11 @@ const postsSlice = createSlice({
 
     createPost: (state, action) => {
       state.postsData.unshift(action.payload);
+    },
+
+    tagUserSave: (state, action) => {
+      state.tagUser = action.payload;
+      console.log("TagUser", state.tagUser);
     },
   },
   extraReducers: (builder) => {

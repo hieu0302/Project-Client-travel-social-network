@@ -17,6 +17,10 @@ const UserAPI = {
     const url = `/users/${id}/changePassword`;
     return api.put(url, data);
   },
+  getInfoUserBySearch: (params) => {
+    const url = `/users/search-user?q=${params}`;
+    return api.get(url);
+  },
 };
 
 export default UserAPI;

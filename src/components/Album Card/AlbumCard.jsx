@@ -57,6 +57,7 @@ const AlbumCard = () => {
         page,
       };
       dispatch(fetchAllAlbum(payload));
+
       setloading(false);
     }, 1000);
   }, [page]);
@@ -273,11 +274,13 @@ const AlbumCard = () => {
               </button>
 
               <button className=" relative col-span-1 ">
-                <div className=" absolute text-center rounded-xl w-full h-full bg-gray-400 bg-opacity-60 top-1/2 left-1/2 text-4xl translate-x-a translate-y-a">
-                  <div className="w-full h-full flex items-center justify-center">
-                    <b>{item.image.length - 3} + </b>
+                {item.image.length > 3 && (
+                  <div className=" absolute text-center rounded-xl w-full h-full bg-gray-400 bg-opacity-60 top-1/2 left-1/2 text-4xl translate-x-a translate-y-a">
+                    <div className="w-full h-full flex items-center justify-center">
+                      <b>{item.image.length - 3} + </b>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <img
                   className=" h-32 w-full object-cover rounded-xl border  "
@@ -299,7 +302,7 @@ const AlbumCard = () => {
                 </p>
               </Dotdotdot>
             </div>
-            <ModalDetailAlbum />
+
             <div className="flex justify-between p-3">
               <div className="flex gap-5 ">
                 <Like
@@ -327,7 +330,7 @@ const AlbumCard = () => {
               </button>
             </div>
             <div className=" px-4">{countLikeRender(item._id)}</div>
-            <ModalUserLiked idAlbum={item._id} />
+
             <ListComment idPost={item._id} />
 
             <div className="px-2 flex">
@@ -352,6 +355,8 @@ const AlbumCard = () => {
           </div>
         ))}
       </InfiniteScroll>
+      <ModalUserLiked />
+      <ModalDetailAlbum />
       {currentPage == totalPages && currentPage !== undefined && (
         <div className=" pb-5">
           <b>Bạn đã xem toàn bộ Album!</b>

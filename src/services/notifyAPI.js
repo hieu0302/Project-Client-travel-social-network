@@ -7,8 +7,9 @@ const NotifyAPI = {
   },
 
   getNotify: (params) => {
-    const { idPost } = params;
-    const url = `/notify?idPost=${idPost}`;
+    const { idUser } = params;
+    console.log("PARAM", params);
+    const url = `/notify?idUser=${idUser}`;
     return api.get(url);
   },
 

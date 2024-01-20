@@ -1,5 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Input, Dropdown, Space, Button, message, Modal, Skeleton } from "antd";
+import {
+  Input,
+  Dropdown,
+  Space,
+  Button,
+  message,
+  Modal,
+  Skeleton,
+  Timeline,
+  ConfigProvider,
+} from "antd";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiClockClockwise, PiDotsThreeCircle } from "react-icons/pi";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -39,6 +49,9 @@ import { likeSliceAction } from "../../redux/likes/LikeSlice.js";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
 import AnimatedNumber from "react-animated-numbers";
 import socket from "../Socket/Soket.js";
+import { albumSliceAction } from "../../redux/album/albumslice.js";
+import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
+import ModalDetailPost from "../DetailPost/DetailPost.jsx";
 
 moment.locale("vi");
 
@@ -48,6 +61,8 @@ const News = () => {
   const { postsData, pagination, postId } = useSelector((state) => state.posts);
 
   const { countLike } = useSelector((state) => state.like);
+
+  const { openModal } = useSelector((state) => state.album);
 
   const [loading, setloading] = useState(true);
 
@@ -106,7 +121,7 @@ const News = () => {
         message.success("Bình luận thành công!");
         dispatch(commentSliceAction.createComment(response.data.comment));
         setValueComment("");
-        if (currentUser.userId !== item.userId) {
+        if (currentUser._id !== item.userId) {
           socket.emit("sendComment", {
             senderName: currentUser.username,
             idSender: currentUser._id,
@@ -199,8 +214,32 @@ const News = () => {
     }
   };
 
+  const childrenTimeline = (item) => {
+    if (!item) {
+      return null;
+    } else {
+      const childent = ` ${item.location}`;
+      return childent;
+    }
+  };
+
+  const timeTimeline = (item) => {
+    if (!item) {
+      return null;
+    } else {
+      const childent = `${item.time}`;
+      return childent;
+    }
+  };
+
+  const openModalDetail = (id) => {
+    dispatch(albumSliceAction.openModal(!openModal));
+    dispatch(albumSliceAction.idAlbumOpenDetail(id));
+  };
+
   return (
     <div className="ml-10 flex flex-col items-center gap-5 w-2/3 mb-6">
+      <ModalDetailPost />
       <div>
         <CreatePost />
       </div>
@@ -256,15 +295,21 @@ const News = () => {
               </div>
             </div>
             <div className="mt-5 relative">
-              <img
-                className=" w-full h-80 object-cover rounded-xl border "
-                src={item.image[0]}
-              />
+              <button
+                onClick={() => openModalDetail(item._id)}
+                className="w-full "
+              >
+                <img
+                  className=" w-full  h-80 object-cover rounded-xl border "
+                  src={item.image[0]}
+                />
+              </button>
+
               <div className=" text-white  font-bold absolute bottom-10 left-5 drop-shadow-2xl">
-                <button className="text-4xl ">
+                <button className="text-3xl ">
                   <p className=" text-shadow-lg shadow-black">{item.title}</p>
                 </button>
-                <p className="text-xl flex gap-2 text-shadow-lg shadow-black">
+                <p className=" text-lg flex gap-2 text-shadow-lg shadow-black">
                   <IoLocationOutline />
                   Địa điểm: {item.location}
                 </p>
@@ -276,7 +321,8 @@ const News = () => {
                 </p>
               </div>
             </div>
-            <div className="flex justify-between p-3">
+
+            <div className="flex justify-between p-3 relative">
               <div className="flex gap-5 ">
                 <Like
                   data={{
@@ -301,9 +347,11 @@ const News = () => {
                 <GoBookmark size={25} color="orange" />
               </button>
             </div>
+
             <div className=" px-4">{countLikeRender(item._id)}</div>
-            <ModalUserLiked />
+
             <ListComment idPost={item._id} />
+
             <div className="px-2 flex">
               <Input
                 theme="light"
@@ -326,6 +374,7 @@ const News = () => {
           </div>
         ))}
       </InfiniteScroll>
+      <ModalUserLiked />
       {currentPage == totalPages && currentPage !== undefined && (
         <div className=" pb-5">
           <b>Bạn đã xem toàn bộ bài Post!</b>
