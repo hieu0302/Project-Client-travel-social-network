@@ -31,9 +31,10 @@ import Like from "../Like/like";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
 import { likeSliceAction } from "../../redux/likes/LikeSlice";
 import ListComment from "../comments/comments.jsx";
-import { albumSliceAction } from "../../redux/album/albumslice.js";
+
 import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
 import socket from "../Socket/Soket.js";
+import { albumSliceAction } from "../../redux/album/albumSlice.js";
 
 moment.locale("vi");
 

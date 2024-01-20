@@ -23,7 +23,7 @@ import { boolean } from "yup";
 import UploadImage from "./UploadImage/uploadImage";
 import UploadImageAPI from "../../services/uploadAPI";
 import FormItem from "antd/es/form/FormItem";
-import { albumSliceAction } from "../../redux/album/albumslice";
+import { albumSliceAction } from "../../redux/album/albumSlice.js";
 
 const { RangePicker } = DatePicker;
 

@@ -49,7 +49,7 @@ import { likeSliceAction } from "../../redux/likes/LikeSlice.js";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
 import AnimatedNumber from "react-animated-numbers";
 import socket from "../Socket/Soket.js";
-import { albumSliceAction } from "../../redux/album/albumslice.js";
+import { albumSliceAction } from "../../redux/album/albumSlice.js";
 import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
 import ModalDetailPost from "../DetailPost/DetailPost.jsx";
 

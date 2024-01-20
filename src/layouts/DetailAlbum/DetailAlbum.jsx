@@ -1,6 +1,6 @@
 import { Carousel, Modal, Skeleton } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { albumSliceAction } from "../../redux/album/albumslice";
+import { albumSliceAction } from "../../redux/album/albumSlice.js";
 import moment from "moment";
 import { PiClockClockwise } from "react-icons/pi";
 import { useEffect, useState } from "react";
