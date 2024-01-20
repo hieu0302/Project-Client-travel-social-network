@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllLike, fetchAllPostLiked, fetchCountLike } from "./LikeAction";
+import {
+  fetchAllLike,
+  fetchAllPostLiked,
+  fetchCountLike,
+} from "./LikeAction.js";
 
 const initialState = {
   likeData: [],
