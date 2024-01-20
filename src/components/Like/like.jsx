@@ -1,7 +1,7 @@
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import LikeAPI from "../../services/likesAPI";
 import { message } from "antd";
-import { fetchAllLike, fetchAllPostLiked } from "../../redux/likes/likeAction";
+import { fetchAllLike, fetchAllPostLiked } from "../../redux/likes/LikeAction";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { likeSliceAction } from "../../redux/likes/LikeSlice";

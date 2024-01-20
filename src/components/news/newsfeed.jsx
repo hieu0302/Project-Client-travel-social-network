@@ -44,7 +44,7 @@ import {
   fetchAllLike,
   fetchAllPostLiked,
   fetchCountLike,
-} from "../../redux/likes/likeAction.js";
+} from "../../redux/likes/LikeAction.js";
 import { likeSliceAction } from "../../redux/likes/LikeSlice.js";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
 import AnimatedNumber from "react-animated-numbers";

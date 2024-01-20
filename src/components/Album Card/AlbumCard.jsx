@@ -24,7 +24,7 @@ import {
   fetchAllLike,
   fetchAllPostLiked,
   fetchCountLike,
-} from "../../redux/likes/likeAction";
+} from "../../redux/likes/LikeAction";
 import { commentSliceAction } from "../../redux/comments/commentSlice";
 import CommentAPI from "../../services/commentAPI";
 import Like from "../Like/like";
