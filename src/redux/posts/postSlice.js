@@ -10,6 +10,9 @@ const initialState = {
   postId: [],
   pagination: {},
   tagUser: [],
+  openModal: false,
+  getIdPost: {},
+  urlImage: [],
 };
 
 const postsSlice = createSlice({
@@ -28,7 +31,16 @@ const postsSlice = createSlice({
 
     tagUserSave: (state, action) => {
       state.tagUser = action.payload;
-      console.log("TagUser", state.tagUser);
+    },
+
+    openModal: (state, action) => {
+      state.openModal = action.payload;
+    },
+    getIdPost: (state, action) => {
+      state.getIdPost = action.payload;
+    },
+    getUrlImage: (state, action) => {
+      state.urlImage = action.payload;
     },
   },
   extraReducers: (builder) => {

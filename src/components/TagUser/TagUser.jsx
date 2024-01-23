@@ -13,27 +13,35 @@ const onSearch = (value) => {
   console.log("search:", value);
 };
 
+
+
 // Filter `option.label` match the user type `input`
 const filterOption = (input, option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
-const TagUser = () => {
+const TagUser = (data) => {
   const [option, setOption] = useState([]);
   const [selected, setSelected] = useState([]);
   const inputRef = useRef(null);
   const dispatch = useDispatch();
-  console.log("VVVVV", option);
+ 
+
+  useEffect(()=>{
+     searchUser(data)
+  },[data])
 
   const handleChange = (value) => {
     console.log(`selected `, value);
     dispatch(postSliceAction.tagUserSave(value));
   };
 
-  console.log("selected1", selected);
+ 
 
   const searchUser = debounce(async (value) => {
     try {
+      
       const result = await UserAPI.getInfoUserBySearch(value);
+      console.log("OKKKKKKK");
 
       setOption(result.data.data);
     } catch (error) {
@@ -48,6 +56,7 @@ const TagUser = () => {
   return (
     <>
       <Select
+        defaultValue={data.data}
         mode="multiple"
         ref={inputRef}
         bordered={false}

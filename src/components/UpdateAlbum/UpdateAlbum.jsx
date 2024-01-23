@@ -19,8 +19,7 @@ import AlbumAPI from "../../services/albumAPI";
 import { boolean } from "yup";
 import UploadImage from "./UploadImage/uploadImage";
 import UploadImageAPI from "../../services/uploadAPI";
-import { albumSliceAction } from "../../redux/album/albumSlice.js";
-
+import { albumSliceAction } from "../../redux/album/albumSlice";
 
 const { RangePicker } = DatePicker;
 

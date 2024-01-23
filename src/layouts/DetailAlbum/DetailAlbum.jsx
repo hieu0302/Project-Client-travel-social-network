@@ -5,8 +5,9 @@ import moment from "moment";
 import { PiClockClockwise } from "react-icons/pi";
 import { useEffect, useState } from "react";
 import { fetchCommentByPage } from "../../redux/comments/commentAction";
-import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroller";
 import { commentSliceAction } from "../../redux/comments/commentSlice";
+import { AiOutlineComment } from "react-icons/ai";
 
 moment.locale("vi");
 
@@ -25,6 +26,7 @@ const ModalDetailAlbum = () => {
   const { currentPage, totalPages, totalComment } = pagination || {};
   const shouldFetchMoreComment = currentPage < totalPages;
   const closeModal = () => {
+    setPage(1);
     dispatch(albumSliceAction.openModal(!openModal));
     dispatch(commentSliceAction.removeCommentData([]));
     dispatch(albumSliceAction.removeIdAlbum([]));
@@ -32,6 +34,8 @@ const ModalDetailAlbum = () => {
   const detailAlbum = albumData.filter(
     (item) => item._id === idAlbumOpendetail
   );
+
+  console.log("TotalPage>>>", page);
 
   useEffect(() => {
     if (idAlbumOpendetail.length !== 0) {
@@ -44,9 +48,10 @@ const ModalDetailAlbum = () => {
   }, [page, idAlbumOpendetail]);
 
   const fetchMoreComment = () => {
-    setPage(currentPage + 1);
+    setTimeout(() => {
+      setPage(currentPage + 1);
+    }, 1000);
   };
-  
 
   return (
     <Modal
@@ -83,24 +88,24 @@ const ModalDetailAlbum = () => {
           </div>
 
           <div
-            id="scrollableDiv"
+            // id="scrollableDiv"
             className=" h-96 overflow-auto no-scrollbar flex flex-col"
           >
             <div>
               <b className=" text-base">{detailAlbum[0]?.username}</b>{" "}
               {detailAlbum[0]?.description}
             </div>
+            <div className="flex items-center gap-3">
+              <AiOutlineComment size={20} />
+              <b> {totalComment} bình luận</b>
+            </div>
 
             <InfiniteScroll
-              loader={<Skeleton active avatar paragraph={{ rows: 3 }} />}
-              dataLength={commentDataByPage.length}
-              next={fetchMoreComment}
-              hasMore={shouldFetchMoreComment}
-              inverse={true}
-              scrollableTarget="scrollableDiv"
-              endMessage={
-                <b style={{ paddingLeft: "25%" }}>Bạn đã xem hết bình luận</b>
-              }
+              loader={<Skeleton active avatar paragraph={{ rows: 1 }} />}
+              pageStart={1}
+              loadMore={fetchMoreComment}
+              hasMore={currentPage < totalPages}
+              useWindow={false}
             >
               {commentDataByPage.map((comment, commentIndex) => {
                 return (
@@ -110,8 +115,13 @@ const ModalDetailAlbum = () => {
                         src={comment.avatar}
                         className="w-10 h-10 rounded-full"
                       />
-                      <div className=" bg-gray-100 p-3 m-2 rounded-xl">
-                        <b>{comment.userComment}</b>
+                      <div className=" w-80 overflow-auto bg-gray-100 p-3 m-2 rounded-xl">
+                        <div className="flex items-center justify-between">
+                          <b>{comment.userComment}</b>
+                          <div className=" text-xs">
+                            {moment(new Date(comment.createdAt)).fromNow()}
+                          </div>
+                        </div>
                         <p>{comment.comment}</p>
                       </div>
                     </div>

@@ -52,6 +52,8 @@ import socket from "../Socket/Soket.js";
 import { albumSliceAction } from "../../redux/album/albumSlice.js";
 import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
 import ModalDetailPost from "../DetailPost/DetailPost.jsx";
+import RenderTagUser from "../RenderTagUser/RendertagUser.jsx";
+import UpdatePost from "../UpdatePost-Album/UpdatePost.jsx";
 
 moment.locale("vi");
 
@@ -165,7 +167,17 @@ const News = () => {
     console.log(key);
     if (key == 1) {
       ShowConfirm(id);
+      return;
     }
+    if (key == 0) {
+      openModalEditPost(id);
+    }
+  };
+
+  const openModalEditPost = (id) => {
+    dispatch(postSliceAction.openModal(true));
+    const result = postsData.find((item) => item._id === id);
+    dispatch(postSliceAction.getIdPost(result));
   };
 
   const handleDelete = async (id) => {
@@ -322,6 +334,17 @@ const News = () => {
               </div>
             </div>
 
+            {item?.tagUser && item?.tagUser?.length != 0 && (
+              <div className="px-2">
+                <b>Những người cùng tham gia:</b>
+                <div className="flex w-full gap-2 flex-wrap">
+                  {item?.tagUser?.map((id) => (
+                    <RenderTagUser data={id} />
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between p-3 relative">
               <div className="flex gap-5 ">
                 <Like
@@ -374,6 +397,7 @@ const News = () => {
           </div>
         ))}
       </InfiniteScroll>
+      <UpdatePost />
       <ModalUserLiked />
       {currentPage == totalPages && currentPage !== undefined && (
         <div className=" pb-5">

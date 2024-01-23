@@ -21,6 +21,7 @@ const UserAPI = {
     const url = `/users/search-user?q=${params}`;
     return api.get(url);
   },
+
 };
 
 export default UserAPI;
