@@ -6,7 +6,7 @@ const PATH = {
   LOGIN: "/login",
 };
 
-const BASE_API_URL = "http://localhost:3001/api/v1";
+const BASE_API_URL = "https://trip-social.onrender.com/api/v1";
 
 // https://trip-social.onrender.com/api/v1
 
