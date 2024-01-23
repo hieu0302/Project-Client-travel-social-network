@@ -14,26 +14,22 @@ const getBase64 = (file) =>
   });
 
 const UploadImage = ({ setUrl }) => {
+  const { urlImage, openModal } = useSelector((state) => state.posts);
+
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
   //   const { activePage, isEditingPage } = useSelector((state) => state.page);
   //   const { currentUser, openEditProfile } = useSelector((state) => state.user);
-
-  //   useEffect(() => {
-  //     if (isEditingPage) {
-  //       setFileList([{ url: activePage.avatar[0] }]);
-  //     }
-  //     if (openEditProfile) {
-  //       if (!currentUser.avatar) {
-  //         return;
-  //       }
-  //       setFileList([{ url: currentUser.avatar[0] }]);
-  //     }
-
-  //   }, [isEditingPage, openEditProfile]);
+  useEffect(() => {
+    if (openModal && urlImage) {
+      setFileList([{ url: urlImage[0] }]);
+      console.log("File", urlImage);
+    }
+  }, [urlImage]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -55,7 +51,7 @@ const UploadImage = ({ setUrl }) => {
     setUploading(true);
     const formData = new FormData();
     formData.append("image", info.file);
-    console.log("FORMDATA::::", info.file);
+
     try {
       const res = await UploadImageAPI.uploadImage(formData);
       if (res.data.url) {
@@ -64,7 +60,6 @@ const UploadImage = ({ setUrl }) => {
         setUrl([res.data.url]);
       }
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.log(err);
     } finally {
       setUploading(false);
@@ -119,7 +114,7 @@ const UploadImage = ({ setUrl }) => {
           });
         }}
       >
-        {fileList.length >= 1 ? null : uploadButton}
+        {fileList?.length >= 2 ? null : uploadButton}
       </Dragger>
       <Modal
         open={previewOpen}

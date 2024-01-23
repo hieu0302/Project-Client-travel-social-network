@@ -41,6 +41,7 @@ const CreatePost = () => {
   const templateValue = {
     time: "",
     location: "",
+    id: "",
   };
 
   const [form] = Form.useForm();
