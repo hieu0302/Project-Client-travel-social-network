@@ -23,3 +23,10 @@ MẠNG XÃ HỘI CHIA SẺ HÀNH TRÌNH DU LỊCH (Trip Social)
   - Lưu lại các bài viết yêu thích 
   - Trang cá nhân người dùng
   - Tìm kiếm các bài viết, tài khoản người dùng.
+
+• Link deploy dự án: https://project-client-travel-social-network.vercel.app/
+
+• Link github: 
+  - Frontend: https://github.com/hieu0302/Project-Client-travel-social-network
+  - Backend: https://github.com/hieu0302/Project-Server-travel-social-network
+  - Backend Socket.io: https://github.com/hieu0302/Project-Socket-travel-social-network
