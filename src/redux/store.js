@@ -5,6 +5,7 @@ import commentReducer from "./comments/commentSlice";
 import likeReducer from "./likes/LikeSlice";
 import albumReducer from "./album/albumSlice";
 import notifyReducer from "./Notification/NotificationSilce";
+import chatRoomReducer from "./chat/ChatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     like: likeReducer,
     album: albumReducer,
     notify: notifyReducer,
+    chatRoom: chatRoomReducer,
   },
 });

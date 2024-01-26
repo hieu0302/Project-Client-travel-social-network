@@ -34,7 +34,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="container mx-auto mt-10 ">
+    <div className="container mx-auto py-3 ">
       <div
         className="max-w-md mx-auto bg-blue p-5 rounded-md shadow-md"
         style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
@@ -111,11 +111,13 @@ const Signup = () => {
           </Form.Item>
           <Form.Item>
             <p className=" font-bold"> Tải lên Avatar của bạn: </p>
-            <UploadAvatar
-              setUrl={(link) =>
-                setCloudinaryUrl({ ...cloudinaryUrl, avatar: link })
-              }
-            />
+            <div className=" text-center">
+              <UploadAvatar
+                setUrl={(link) =>
+                  setCloudinaryUrl({ ...cloudinaryUrl, avatar: link })
+                }
+              />
+            </div>
           </Form.Item>
 
           <Form.Item name="isAgreed" valuePropName="checked" noStyle>
@@ -125,7 +127,7 @@ const Signup = () => {
           </Form.Item>
 
           <Button
-            className="h-11 bg-[#F98616] text-white font-bold hover:bg-yellow-400 hover:text-black "
+            className="w-full h-11 bg-[#0077ff] text-white font-bold  hover:bg-[#312e81] hover:text-black "
             htmlType="submit"
           >
             Đăng ký

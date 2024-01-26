@@ -1,15 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Input,
-  Dropdown,
-  Space,
-  Button,
-  message,
-  Modal,
-  Skeleton,
-  Timeline,
-  ConfigProvider,
-} from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Dropdown, Button, message, Modal, Skeleton } from "antd";
 import { IoLocationOutline } from "react-icons/io5";
 import { PiClockClockwise, PiDotsThreeCircle } from "react-icons/pi";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -21,16 +11,13 @@ import {
 } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
-import EmojiPicker from "emoji-picker-react";
 import {
-  GoHeart,
   GoCommentDiscussion,
   GoShareAndroid,
   GoBookmark,
 } from "react-icons/go";
 import CreatePost from "../../layouts/createPost/createPost";
 import PostsAPI from "../../services/postsAPI.js";
-import UserAPI from "../../services/userAPI.js";
 import { fetchAllPosts } from "../../redux/posts/postActions.js";
 import moment from "moment";
 import "moment/dist/locale/vi";
@@ -47,10 +34,8 @@ import {
 } from "../../redux/likes/likeAction.js";
 import { likeSliceAction } from "../../redux/likes/LikeSlice.js";
 import ModalUserLiked from "../ModalUserLikePost/Modal.jsx";
-import AnimatedNumber from "react-animated-numbers";
 import socket from "../Socket/Soket.js";
 import { albumSliceAction } from "../../redux/album/albumslice.js";
-import ModalDetailAlbum from "../../layouts/DetailAlbum/DetailAlbum.jsx";
 import ModalDetailPost from "../DetailPost/DetailPost.jsx";
 import RenderTagUser from "../RenderTagUser/RendertagUser.jsx";
 import UpdatePost from "../UpdatePost-Album/UpdatePost.jsx";
@@ -61,20 +46,13 @@ const { confirm } = Modal;
 
 const News = () => {
   const { postsData, pagination, postId } = useSelector((state) => state.posts);
-
   const { countLike } = useSelector((state) => state.like);
-
   const { openModal } = useSelector((state) => state.album);
-
   const [loading, setloading] = useState(true);
-
   const { currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
   const [page, setPage] = useState(1);
-
   const { currentPage, totalPages } = pagination || {};
-
   const shouldFetchMorePost = currentPage < totalPages;
 
   useEffect(() => {
@@ -115,7 +93,7 @@ const News = () => {
       avatar: currentUser.avatar,
       userId: currentUser._id,
     };
-    console.log("ITEMDATA12345:::", item);
+
     try {
       const response = await CommentAPI.createComent(comment);
 
@@ -162,9 +140,8 @@ const News = () => {
     });
   };
 
-  const handleClick = (key, id) => {
-    console.log(id);
-    console.log(key);
+  const handleClick = (key, id, index) => {
+    dispatch(postSliceAction.getIndexPost(index));
     if (key == 1) {
       ShowConfirm(id);
       return;
@@ -247,6 +224,7 @@ const News = () => {
   const openModalDetail = (id) => {
     dispatch(albumSliceAction.openModal(!openModal));
     dispatch(albumSliceAction.idAlbumOpenDetail(id));
+    console.log("IDCLICK>>>", id);
   };
 
   return (
@@ -275,27 +253,27 @@ const News = () => {
               <div className="flex items-center gap-5">
                 <div className=" flex justify-center items-center h-14 w-14 bg-gradient-to-r from-indigo-600 to-blue-300  rounded-full">
                   <img
-                    src={item.avatar}
+                    src={item?.avatar}
                     className=" h-12 w-12 rounded-full border-2 border-white"
                   />
                 </div>
                 <div>
                   <p className=" font-extrabold font-nunito text-lg">
-                    {item.username}
+                    {item?.username}
                   </p>
                   <p className=" flex gap-3 text-gray-500">
                     <PiClockClockwise size={20} color="red" />
                     Chuyến đi đã được khởi tạo từ{" "}
-                    {moment(new Date(item.createdAt)).fromNow()}
+                    {moment(new Date(item?.createdAt)).fromNow()}
                   </p>
                 </div>
               </div>
               <div>
-                {currentUser._id === item.userId ? (
+                {currentUser._id === item?.userId ? (
                   <Dropdown
                     menu={{
                       items,
-                      onClick: (e) => handleClick(e.key, item._id),
+                      onClick: (e) => handleClick(e.key, item?._id, index),
                     }}
                     trigger={["click"]}
                   >
@@ -308,28 +286,28 @@ const News = () => {
             </div>
             <div className="mt-5 relative">
               <button
-                onClick={() => openModalDetail(item._id)}
+                onClick={() => openModalDetail(item?._id)}
                 className="w-full "
               >
                 <img
                   className=" w-full  h-80 object-cover rounded-xl border "
-                  src={item.image[0]}
+                  src={item?.image[0]}
                 />
               </button>
 
               <div className=" text-white  font-bold absolute bottom-10 left-5 drop-shadow-2xl">
                 <button className="text-3xl ">
-                  <p className=" text-shadow-lg shadow-black">{item.title}</p>
+                  <p className=" text-shadow-lg shadow-black">{item?.title}</p>
                 </button>
                 <p className=" text-lg flex gap-2 text-shadow-lg shadow-black">
                   <IoLocationOutline />
-                  Địa điểm: {item.location}
+                  Địa điểm: {item?.location}
                 </p>
                 <p className="flex gap-3 text-shadow-lg shadow-black">
-                  <MdFlightTakeoff size={20} /> Bắt đầu: {item.startDay}
+                  <MdFlightTakeoff size={20} /> Bắt đầu: {item?.startDay}
                 </p>
                 <p className="flex gap-3 text-shadow-lg shadow-black">
-                  <MdFlightLand size={20} /> Kết thúc: {item.endDay}
+                  <MdFlightLand size={20} /> Kết thúc: {item?.endDay}
                 </p>
               </div>
             </div>
@@ -338,8 +316,8 @@ const News = () => {
               <div className="px-2">
                 <b>Những người cùng tham gia:</b>
                 <div className="flex w-full gap-2 flex-wrap">
-                  {item?.tagUser?.map((id) => (
-                    <RenderTagUser data={id} />
+                  {item?.tagUser?.map((id, index) => (
+                    <RenderTagUser key={index} data={id} />
                   ))}
                 </div>
               </div>
@@ -349,14 +327,14 @@ const News = () => {
               <div className="flex gap-5 ">
                 <Like
                   data={{
-                    idPost: item._id,
-                    username: currentUser.username,
-                    currentPage: pagination.currentPage,
-                    idUser: currentUser._id,
-                    avatar: currentUser.avatar,
-                    idUserCreate: item.userId,
-                    usernameCreate: item.username,
-                    titlePost: item.title,
+                    idPost: item?._id,
+                    username: currentUser?.username,
+                    currentPage: pagination?.currentPage,
+                    idUser: currentUser?._id,
+                    avatar: currentUser?.avatar,
+                    idUserCreate: item?.userId,
+                    usernameCreate: item?.username,
+                    titlePost: item?.title,
                   }}
                 />
                 <button>
@@ -371,9 +349,9 @@ const News = () => {
               </button>
             </div>
 
-            <div className=" px-4">{countLikeRender(item._id)}</div>
+            <div className=" px-4">{countLikeRender(item?._id)}</div>
 
-            <ListComment idPost={item._id} />
+            <ListComment idPost={item?._id} />
 
             <div className="px-2 flex">
               <Input
@@ -381,7 +359,7 @@ const News = () => {
                 size="large"
                 placeholder="Thêm bình luận..."
                 bordered={false}
-                value={valueComment.comment}
+                value={valueComment?.comment}
                 onChange={(e) => {
                   setValueComment({ comment: e.target.value });
                 }}

@@ -46,8 +46,8 @@ const ListComment = (props) => {
     <div>
       <p className="px-4 font-bold">{quantityComment.length} bình luận</p>
       {dataCommentFilter.map((comment, commentIndex) => (
-        <div className="flex  items-center">
-          <div key={commentIndex} className="flex gap-3 items-center px-5">
+        <div key={commentIndex} className="flex  items-center">
+          <div className="flex gap-3 items-center px-5">
             <img src={comment.avatar} className="w-10 h-10 rounded-full" />
             <div className=" bg-gray-100 p-2 m-1 rounded-xl text-sm">
               <div className="flex gap-4 items-center">

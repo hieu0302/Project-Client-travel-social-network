@@ -35,8 +35,6 @@ const ModalDetailAlbum = () => {
     (item) => item._id === idAlbumOpendetail
   );
 
-  console.log("TotalPage>>>", page);
-
   useEffect(() => {
     if (idAlbumOpendetail.length !== 0) {
       const payload = {

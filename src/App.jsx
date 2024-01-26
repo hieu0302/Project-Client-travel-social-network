@@ -7,10 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import NavBar from "./layouts/NavBar/navbar";
 import { TOKEN_TYPES } from "./utils/constants";
 import { fetchCurrentUser } from "./redux/user/userActions";
-import Logo from "./assets/Trip-removebg-preview.png";
-import { Alert, Flex, Spin } from "antd";
 import socket from "./components/Socket/Soket.js";
-import Login from "./pages/authentication/LoginPage/LoginPage.jsx";
+import SearchBox from "./pages/Search/Search.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -39,6 +37,7 @@ const App = () => {
     if (IdUser) {
       socket?.emit("addNewUser", IdUser?.idUser);
     }
+    console.log("UserId", IdUser?.idUser);
   }, [socket]);
 
   useEffect(() => {
@@ -53,6 +52,7 @@ const App = () => {
       {isAuthenticated && (
         <div>
           <NavBar />
+          <SearchBox />
         </div>
       )}
       <Routes>

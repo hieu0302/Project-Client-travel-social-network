@@ -15,6 +15,11 @@ const PendingAPI = {
     const url = `/pendingNotify/${id}`;
     return api.delete(url);
   },
+
+  deleteByIdRoom: (id) => {
+    const url = `/pendingNotify/delete-id-room/${id}`;
+    return api.delete(url);
+  },
 };
 
 export default PendingAPI;

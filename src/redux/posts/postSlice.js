@@ -13,6 +13,8 @@ const initialState = {
   openModal: false,
   getIdPost: {},
   urlImage: [],
+  indexPost: [],
+  detailPostSearch: [],
 };
 
 const postsSlice = createSlice({
@@ -41,6 +43,15 @@ const postsSlice = createSlice({
     },
     getUrlImage: (state, action) => {
       state.urlImage = action.payload;
+    },
+    getIndexPost: (state, action) => {
+      state.indexPost = action.payload;
+    },
+    updatePost: (state, action) => {
+      state.postsData = action.payload;
+    },
+    detailPost: (state, action) => {
+      state.detailPostSearch = action.payload;
     },
   },
   extraReducers: (builder) => {

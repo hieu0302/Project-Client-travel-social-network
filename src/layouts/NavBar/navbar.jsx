@@ -15,7 +15,9 @@ import { message, notification } from "antd";
 import socket from "../../components/Socket/Soket.js";
 import NotifyAPI from "../../services/notifyAPI.js";
 import PendingAPI from "../../services/pendingNotifyAPI.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { chatRoomSliceAction } from "../../redux/chat/ChatSlice.js";
+import { notifySliceAction } from "../../redux/Notification/NotificationSilce.js";
 
 const menuItems = [
   { icon: RiHomeWifiLine, text: "Những chuyến đi", to: "/" },
@@ -23,20 +25,23 @@ const menuItems = [
   { icon: RiNotification3Line, text: "Thông báo", to: "/notify" },
   { icon: RiBookmark3Line, text: "Đã Lưu", to: "/bookmark" },
   { icon: RiInboxArchiveLine, text: "Hộp thư", to: "/inbox" },
-  { icon: RiEarthLine, text: "Khám phá", to: "/discovery" },
+  { icon: RiEarthLine, text: "Khám phá" },
   { icon: RiFileUserLine, text: "Trang cá nhân", to: "/profile" },
 ];
 
 const NavBar = () => {
   const [notifyLike, setNotifyLike] = useState([]);
+  const [messagePending, setMessagePending] = useState([]);
   const [api, contextHolder] = notification.useNotification();
   const { currentUser } = useSelector((state) => state.auth);
-  console.log("ABC>>>", currentUser);
+  const { notyfyMessage, idRoomChat, deleteNavNumber } = useSelector(
+    (state) => state.chatRoom
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     socket.on("getNotificationLike", (data) => {
       setNotifyLike((prev) => [...prev, data]);
-      // console.log("DATA:::???", data);
 
       createNotify(data.dataSendLike);
 
@@ -49,27 +54,43 @@ const NavBar = () => {
 
       openNotification(data.dataSendComment);
     });
+    socket.on("getMessage", (data) => {
+      setMessagePending((prev) => [...prev, data]);
+      dispatch(chatRoomSliceAction.getNotifyMessage(data.dataSendMessage));
+      openNotification(data.dataSendMessage);
+    });
   }, [socket]);
 
   useEffect(() => {
+    if (notyfyMessage.length !== 0) {
+      const audio = new Audio("../../assets/notify.mp3");
+      audio.play();
+    }
+  }, [notyfyMessage]);
+
+  useEffect(() => {
     socket.on("SendPending", (dataPending) => {
-      console.log("dataSendComment", dataPending);
       const data = dataPending.dataPending.data;
-      setNotifyLike(data);
+      const dataFilter = data?.filter((item) => item.type == "message");
+      console.log("DATA____", dataFilter);
+      setNotifyLike(data?.filter((item) => item.type !== "message"));
+      setMessagePending(data?.filter((item) => item.type == "message"));
+
+      dispatch(chatRoomSliceAction.getPendingMessage(dataFilter));
+
       if (data.length !== 0) {
         openNotification(data);
       }
-
-      // if (data) {
-      //   data.map((item) => {
-      //     createNotify(item);
-      //   });
-      // }
     });
-  }, []);
+  }, [socket]);
+
+  const handleOpenSearch = (index) => {
+    if (index === 5) {
+      dispatch(notifySliceAction.openSearch(true));
+    }
+  };
 
   const openNotification = (data) => {
-    console.log("DATA Length", data);
     if (data.pending === false) {
       if (data.type === "like") {
         api.info({
@@ -78,10 +99,19 @@ const NavBar = () => {
         });
         return;
       }
-      api.info({
-        message: `Thông báo`,
-        description: `${data.senderName} đã bình luận "${data.comment}" vào bài viết ${data.titlePost} của bạn`,
-      });
+      if (data.type === "comment") {
+        api.info({
+          message: `Thông báo`,
+          description: `${data.senderName} đã bình luận "${data.comment}" vào bài viết ${data.titlePost} của bạn`,
+        });
+        return;
+      }
+      if (data.type === "message") {
+        api.info({
+          message: "Thông báo",
+          description: `${data.nameSender} đã gửi tin nhắn "${data.text}" cho bạn`,
+        });
+      }
     } else {
       api.info({
         message: `Thông báo`,
@@ -120,10 +150,16 @@ const NavBar = () => {
         }
       };
       deletePending();
+      return;
     }
   };
 
-  console.log("DATA_SEND", notifyLike);
+  useEffect(() => {
+    if (deleteNavNumber || idRoomChat) {
+      setMessagePending("");
+    }
+  }, [deleteNavNumber, idRoomChat]);
+
   const handleLogOut = () => {
     localStorage.clear();
     window.location.reload();
@@ -142,21 +178,39 @@ const NavBar = () => {
               key={index}
               className={`flex items-center rounded-lg hover:font-extrabold hover:bg-slate-100 h-10 hover:scale-105 transform transition duration-300 `}
             >
-              <NavLink
-                to={item.to}
-                className={({ isActive }) => {
-                  const activeClass = isActive ? " font-extrabold" : "";
-                  return ` ${activeClass} flex items-center gap-3`;
-                }}
-                onClick={() => handleNotify(index)}
-              >
-                <item.icon size={30} />
-                {item.text}
-              </NavLink>
+              {item.text !== "Khám phá" ? (
+                <NavLink
+                  to={item.to}
+                  className={({ isActive }) => {
+                    const activeClass = isActive ? " font-extrabold" : "";
+                    return ` ${activeClass} flex items-center gap-3`;
+                  }}
+                  onClick={() => handleNotify(index)}
+                >
+                  <item.icon size={30} />
+                  {item.text}
+                </NavLink>
+              ) : (
+                <div
+                  onClick={() => handleOpenSearch(index)}
+                  className="flex items-center gap-3 hover:cursor-pointer"
+                >
+                  <item.icon size={30} />
+                  {item.text}
+                </div>
+              )}
+
               {notifyLike.length !== 0 && index == 2 && (
                 <div className="  ml-5 w-5 h-5 bg-red-600 rounded-full">
                   <p className=" text-white text-center text-sm">
                     {notifyLike.length}
+                  </p>
+                </div>
+              )}
+              {messagePending.length !== 0 && index == 4 && (
+                <div className="  ml-10 w-5 h-5 bg-red-600 rounded-full">
+                  <p className=" text-white text-center text-sm">
+                    {messagePending.length}
                   </p>
                 </div>
               )}

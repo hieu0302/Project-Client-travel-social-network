@@ -22,6 +22,11 @@ const PostsAPI = {
     const url = `/posts/${id}`;
     return api.delete(url);
   },
+
+  getPostsBySearch: (params) => {
+    const url = `/posts/search?q=${params}`;
+    return api.get(url);
+  },
 };
 
 export default PostsAPI;

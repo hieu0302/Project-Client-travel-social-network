@@ -5,7 +5,8 @@ import User from "../pages/User/user";
 import Authen from "../pages/authentication/authen";
 import Bookmark from "../pages/Bookmark/Boomark";
 import Album from "../pages/Album/album";
-import Chatbox from "../pages/Chat/Chat";
+import ChatBox from "../pages/Chat/Chat";
+import Search from "../pages/Search/Search";
 
 const publicRoutes = [
   { path: "/login", component: Authen },
@@ -14,7 +15,7 @@ const publicRoutes = [
 
 const privateRoutes = [
   { path: "/", component: NewsFeed },
-  { path: "/inbox", component: Chatbox },
+  { path: "/inbox", component: ChatBox },
   { path: "/user", component: User },
   { path: "/notify", component: Notify },
   { path: "/profile", component: profilePage },

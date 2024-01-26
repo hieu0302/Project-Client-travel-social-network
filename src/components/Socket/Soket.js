@@ -1,7 +1,7 @@
 import io from "socket.io-client";
 
-const socket = io("http://localhost:4000");
-
-// const socket = io("https://trip-social-socket.onrender.com");
+const socket = io("http://localhost:8080");
 
 export default socket;
+// const socket = io("https://trip-social-socket.onrender.com");
+
