@@ -5,7 +5,7 @@ import { notifySliceAction } from "../../redux/Notification/NotificationSilce";
 import UserAPI from "../../services/userAPI";
 import { debounce } from "lodash";
 import PostsAPI from "../../services/postsAPI";
-import { albumSliceAction } from "../../redux/album/albumslice";
+import { albumSliceAction } from "../../redux/album/albumSlice";
 import ModalDetailPost from "../../components/DetailPost/DetailPost";
 import { postSliceAction } from "../../redux/posts/postSlice";
 
