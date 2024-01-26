@@ -22,6 +22,7 @@ const authSlice = createSlice({
     addNewSocket: (state, { payload }) => {
       state.socket = payload.action;
     },
+    
   },
   extraReducers: (builder) => {
     // Handle async action

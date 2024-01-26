@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import api from "./axiosInstance.js";
 const PostsAPI = {
   getALLPosts: (params) => {
@@ -7,7 +7,10 @@ const PostsAPI = {
     return api.get(url);
   },
   // const url = `/posts?limit=${limit}&page=${page}&sort=${sort}`;
-
+  getPostsByUserId: () => {
+    const url = `/posts/getPostByUserId`;
+    return api.get(url);
+  },
   createPost: (data) => {
     const url = "/posts";
     return api.post(url, data);
