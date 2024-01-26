@@ -19,7 +19,7 @@ const RenderTagUser = (item) => {
 
   return (
     <button className="flex  items-center  gap-2 bg-slate-200 p-2 rounded-lg shadow-md">
-      <img src={data?.data?.data.avatar} className="w-6 h-6 rounded-full" />
+      <img src={data?.data?.data?.avatar} className="w-6 h-6 rounded-full" />
       <div>{data?.data?.data?.username}</div>
     </button>
   );

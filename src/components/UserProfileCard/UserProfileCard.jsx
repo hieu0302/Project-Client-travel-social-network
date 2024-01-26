@@ -2,8 +2,7 @@ import { FaGithub } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
-import { Avatar, Badge, Button, Switch, Space } from "antd";
-import { IoIosNotifications } from "react-icons/io";
+import { Badge } from "antd";
 import { useSelector } from "react-redux";
 
 const UserProfileCard = () => {
@@ -13,9 +12,6 @@ const UserProfileCard = () => {
     <div className=" w-1/3 mt-10 ">
       <div className="flex flex-col justify-center max-w-xs mx-auto bg-white shadow-xl rounded-xl pt-5 px-8 pb-2">
         <div className="w-20 mx-auto  rounded-full">
-          {/* <Badge dot="true" color="green">
-            <Avatar shape="circle" size={64} src="https://picsum.photos/200" />
-          </Badge> */}
           <Badge dot={true} color="green">
             <img
               className=" w-20 mx-auto shadow-xl rounded-full"
@@ -33,9 +29,6 @@ const UserProfileCard = () => {
           </p>
           <div className="flex align-center justify-center">
             <a className="text-xl m-2 p-2  text-gray-800 hover:bg-gray-800 rounded-full hover:text-white transition-colors duration-300">
-              {/* <Badge>
-                <IoIosNotifications size={25} />
-              </Badge> */}
               <FaGithub />
               <span class="sr-only">Github</span>
             </a>

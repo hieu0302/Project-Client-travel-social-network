@@ -24,6 +24,9 @@ const commentSlice = createSlice({
     removeCommentData: (state, action) => {
       state.commentDataByPage = action.payload;
     },
+    removePage: (state, action) => {
+      state.pagination = { totalItem: 0 };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -62,6 +65,7 @@ const commentSlice = createSlice({
           if (!state.commentDataByPage.find((x) => x._id == item._id)) {
             newResult.push(item);
             state.pagination = payload.pagination;
+            console.log("PAYLOAD", payload.pagination);
           }
         });
         state.commentDataByPage = newResult;

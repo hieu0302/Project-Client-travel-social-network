@@ -4,12 +4,18 @@ import { fetchAllNotify } from "./NotificationAction";
 const initialState = {
   notifyData: [],
   isLoading: false,
+  openSearch: false,
 };
 
 const notifySlice = createSlice({
   name: "notify",
   initialState,
-  reducers: {},
+  reducers: {
+    openSearch: (state, action) => {
+      state.openSearch = action.payload;
+      console.log("Search", state.openSearch);
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -19,7 +25,6 @@ const notifySlice = createSlice({
       .addCase(fetchAllNotify.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.notifyData = payload.notifyData;
-        console.log(payload.notifyData);
       })
       .addCase(fetchAllNotify.rejected, (state, action) => {
         (state.isLoading = false), (state.error = action.error.message);

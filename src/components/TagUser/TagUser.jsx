@@ -13,9 +13,6 @@ const onSearch = (value) => {
   console.log("search:", value);
 };
 
-
-
-// Filter `option.label` match the user type `input`
 const filterOption = (input, option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
@@ -26,22 +23,21 @@ const TagUser = (data) => {
   const dispatch = useDispatch();
  
 
-  useEffect(()=>{
-     searchUser(data)
-  },[data])
+  useEffect(() => {
+    searchUser(data);
+  }, [data]);
+
+  console.log("OKKKK", data);
 
   const handleChange = (value) => {
-    console.log(`selected `, value);
     dispatch(postSliceAction.tagUserSave(value));
   };
 
- 
+  const selectMode = data?.data === "Select" ? "default" : "multiple";
 
   const searchUser = debounce(async (value) => {
     try {
-      
       const result = await UserAPI.getInfoUserBySearch(value);
-      console.log("OKKKKKKK");
 
       setOption(result.data.data);
     } catch (error) {
@@ -57,16 +53,11 @@ const TagUser = (data) => {
     <>
       <Select
         defaultValue={data.data}
-        mode="multiple"
+        mode={selectMode}
         ref={inputRef}
         bordered={false}
-        // size="small"
         style={{ width: 200 }}
         placeholder="Thêm người tham gia..."
-        //   value={inputValue}
-        // onChange={(newValue) => {
-        //   setSelected(newValue);
-        // }}
         onChange={handleChange}
         showSearch
         optionLabelProp="label"

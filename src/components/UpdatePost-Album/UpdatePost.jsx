@@ -35,20 +35,14 @@ const UpdatePost = () => {
   console.log("Form", form);
 
   const [cloudinaryUrl, setCloudinaryUrl] = useState([]);
-  console.log("URL", cloudinaryUrl);
   const [datePicker, setDatePicker] = useState([]);
-
   const { tagUser } = useSelector((state) => state.posts);
 
-  const { postsData, openModal, getIdPost } = useSelector(
+  const { postsData, openModal, getIdPost, indexPost } = useSelector(
     (state) => state.posts
   );
 
-  console.log("TagUser", tagUser);
-
   const [inputTimeline, setInputTimeline] = useState([]);
-
-  console.log("Timeline", inputTimeline);
   const { currentUser } = useSelector((state) => state.auth);
 
   const initialValues = {
@@ -62,17 +56,21 @@ const UpdatePost = () => {
   const [imageOld, setImageOld] = useState();
 
   const [value, setValue] = useState(initialValues);
-  console.log("Value", imageOld);
-  console.log("Value2", value);
+  const [update, setUpdate] = useState([]);
 
   const [abc, setabc] = useState("true");
 
   const postDataById = postsData.find((item) => item._id === getIdPost);
   //   const newValueInput = [inputTimeline];
-  console.log("Hehehe???", inputTimeline);
+
   const addInputTimeline = () => {
     setInputTimeline([...inputTimeline, templateValue]);
   };
+
+  useEffect(() => {
+    setUpdate(postsData);
+  }, [postsData]);
+  console.log("Update", postsData);
 
   useEffect(() => {
     form.resetFields();
@@ -91,10 +89,9 @@ const UpdatePost = () => {
     setInputTimeline(input);
   };
 
-  console.log("POSTDATAID:", postDataById);
   const handleOk = () => {
     handleUpdate();
-    // dispatch(postSliceAction.openModal(false));
+    dispatch(postSliceAction.openModal(false));
   };
   const handleCancel = () => {
     dispatch(postSliceAction.openModal(false));
@@ -111,9 +108,21 @@ const UpdatePost = () => {
         ...cloudinaryUrl,
       };
 
+      const updateRedux = () => {
+        const updatePost = postsData.map((item, i) => {
+          if (i === indexPost) {
+            return { ...item, ...newDataUpdate };
+          } else {
+            return item;
+          }
+        });
+        dispatch(postSliceAction.updatePost(updatePost));
+      };
+
       const respons = await PostsAPI.update(getIdPost._id, newDataUpdate);
       if (respons.status === 200) {
-        message("Cập nhật bài viết thành công");
+        message.success("Cập nhật bài viết thành công");
+        updateRedux();
       }
     } catch (error) {
       console.log(error);

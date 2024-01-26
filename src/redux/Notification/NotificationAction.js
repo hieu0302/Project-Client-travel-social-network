@@ -8,8 +8,6 @@ export const fetchAllNotify = createAsyncThunk(
   async (payload, { rejectWithValue, fulfillWithValue }) => {
     const params = payload;
 
-    console.log("PAYLOAD", payload);
-
     try {
       const response = await NotifyAPI.getNotify(params);
       const payload = {
